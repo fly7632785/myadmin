@@ -1,3 +1,6 @@
+<style lang="less">
+  @import './login.less';
+</style>
 <template>
   <div class="login">
     <div class="login-con">
@@ -13,6 +16,7 @@
 
 <script>
   import LoginForm from "@/components/login/login-form";
+  import {mapActions} from "vuex";
 
   export default {
     name: "login",

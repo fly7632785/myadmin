@@ -4,7 +4,7 @@ import routers from './routers'
 
 Vue.use(Router)
 const router = new Router({
-  routers,
+  routes: routers,
   mode: 'history',
 })
 

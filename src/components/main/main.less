@@ -1,0 +1,105 @@
+
+.main {
+  border: 1px solid #d7dde4;
+  background-color: #f8f8f9;
+  border-radius: 4px;
+  overflow: hidden;
+
+  .sider {
+    .logo-con {
+      //text-align: center;
+      //vertical-align: center;
+      height: 74px;
+      padding: 10px;
+      //fex 居中方案
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      //position: relative;
+      .min-logo {
+        //display: inline;
+        height: 54px;
+      }
+
+      .max-logo {
+        height: 54px;
+        //display: inline;
+        //position: absolute;
+        //top: 50%;
+        //left: 50%;
+        //transform: translate(-50%, -50%);
+      }
+    }
+
+    .menu-item {
+      margin: 0 auto;
+    }
+
+    .menu-item span {
+      display: inline-block;
+      overflow: hidden;
+      width: 69px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      vertical-align: middle;
+      transition: width .2s ease .2s;
+    }
+
+    a.drop-menu-a {
+      display: inline-block;
+      padding: 6px 15px;
+      width: 100%;
+      text-align: center;
+      color: #495060;
+    }
+
+    .ivu-tooltip{
+      width: 100%;
+      .ivu-tooltip-rel{
+        width: 100%;
+      }
+      .ivu-tooltip-popper .ivu-tooltip-content{
+        .ivu-tooltip-arrow{
+          border-right-color: #fff;
+        }
+        .ivu-tooltip-inner{
+          background: #fff;
+          color: #495060;
+        }
+      }
+    }
+    .ivu-dropdown{
+      width: 100%;
+      .ivu-dropdown-rel a{
+        width: 100%;
+      }
+    }
+  }
+
+  .header {
+    background: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, .1);
+
+    .menu-icon {
+      transition: all .3s;
+    }
+
+    .rotate-icon {
+      transform: rotate(-90deg);
+    }
+  }
+
+  .content {
+    .main1 {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+    }
+
+
+  }
+
+  .footer {
+  }
+}

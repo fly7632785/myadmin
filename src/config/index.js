@@ -4,7 +4,4 @@ export default {
     pro: 'https://produce.com'
   },
   homeName: 'home',
-  /**
-   * @description 需要加载的插件
-   */
 }

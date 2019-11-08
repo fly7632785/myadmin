@@ -1,7 +1,11 @@
 import router from '@/router'
 import routers from '@/router/routers'
 import config from '@/config'
-const { homeName } = config
+import {
+  getMenuByRouter,
+} from '@/libs/util'
+
+const {homeName} = config
 
 export default {
   state: {
@@ -12,9 +16,9 @@ export default {
     hasReadErrorPage: false
   },
   getters: {
+    menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access),
+    errorCount: state => state.errorList.length
   },
-  mutations: {
-  },
-  actions: {
-  }
+  mutations: {},
+  actions: {}
 }

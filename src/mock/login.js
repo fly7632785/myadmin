@@ -1,4 +1,3 @@
-import { getParams } from '@/libs/util'
 const USER_MAP = {
   super_admin: {
     name: 'super_admin',
