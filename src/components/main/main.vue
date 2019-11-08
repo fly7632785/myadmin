@@ -6,7 +6,7 @@
         <img v-show="isCollapsed" :src="minLogo" class="min-logo" key="min-logo"/>
       </div>
       <!--展开状态-->
-      <Menu active-name="1-2" theme="dark" width="auto" :open-names="['1']" v-show="!isCollapsed" @on-select="turnToPage">
+      <Menu :active-name="$route.name" theme="dark" width="auto" :open-names="['1']" v-show="!isCollapsed" @on-select="turnToPage">
         <Submenu name="1">
           <template slot="title">
             <Icon type="ios-navigate"></Icon>
