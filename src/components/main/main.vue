@@ -6,13 +6,14 @@
         <img v-show="isCollapsed" :src="minLogo" class="min-logo" key="min-logo"/>
       </div>
       <!--      展开状态-->
-      <Menu class="open-menu" :active-name="$route.name" theme="dark" width="auto" v-show="!isCollapsed" @on-select="turnToPage">
+      <Menu class="open-menu" :active-name="$route.name" theme="dark" width="auto" v-show="!isCollapsed"
+            @on-select="turnToPage">
         <template v-for="item in menuList">
           <!--          有children且只有1个-->
           <template v-if="item.children && item.children.length===1">
             <MenuItem :name='item.children[0].name'>
               <Icon :type="item.children[0].meta.icon"></Icon>
-              <span>{{item.children[0].meta.title}}</span>
+              <span>{{showTitle(item.children[0])}}</span>
             </MenuItem>
           </template>
           <template v-else>
@@ -21,12 +22,12 @@
               <Submenu :name='item.name'>
                 <template slot="title">
                   <Icon :type="item.meta.icon || ''"/>
-                  <Span>{{item.meta.title }}</Span>
+                  <Span>{{showTitle(item) }}</Span>
                 </template>
                 <template v-for="subitem in item.children">
                   <MenuItem :name="subitem.name">
                     <Icon :type="subitem.meta.icon"></Icon>
-                    <Span>{{subitem.meta.title }}</Span>
+                    <Span>{{showTitle(subitem)}}</Span>
                   </MenuItem>
                 </template>
               </Submenu>
@@ -35,7 +36,7 @@
             <template v-else>
               <MenuItem :name='item.name'>
                 <Icon :type="item.meta.icon"></Icon>
-                <Span>{{item.meta.title }}</Span>
+                <Span>{{showTitle(item)}}</Span>
               </MenuItem>
             </template>
 
@@ -56,7 +57,7 @@
                   <DropdownItem :name="subitem.name">
                     <a type="text" class="drop-item-a">
                       <Icon :type="subitem.meta.icon"></Icon>
-                      <span>{{subitem.meta.title}}</span>
+                      <span>{{showTitle(subitem)}}</span>
                     </a>
                   </DropdownItem>
                 </DropdownMenu>
@@ -64,7 +65,7 @@
             </Dropdown>
           </template>
           <template v-else>
-            <Tooltip transfer placement="right" :content="item.meta.title">
+            <Tooltip transfer placement="right" :content="showTitle(item)">
               <a @click="turnToPage(item.name)" type="text" class="drop-menu-a">
                 <Icon :type="item.meta.icon"></Icon>
               </a>
@@ -77,8 +78,7 @@
       <Header class="header" :style="{padding:0}">
         <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin:'0 20px'}" type='md-menu'
               size="24"></Icon>
-        <Icon @click.native="turnToPage('home')" :style="{margin:'0 20px'}" type='md-home'
-              size="24"></Icon>
+        <custom-bread-crumb show-icon style="margin-left: 30px;" :list="breadCrumbList"></custom-bread-crumb>
       </Header>
       <Content class="content">
         <keep-alive>
@@ -94,10 +94,17 @@
   import './main.less'
   import minLogo from '@/assets/images/logo-min.jpg'
   import maxLogo from '@/assets/images/logo.jpg'
-  import router from "@/router";
+  import {mapActions, mapMutations} from "vuex";
+  import routers from '@/router/routers'
+  import mixin from './mixin'
+  import customBreadCrumb from './custom-bread-crumb'
 
   export default {
     name: "Main",
+    mixins: [mixin],
+    components:{
+      customBreadCrumb,
+    },
     data() {
       return {
         isCollapsed: false,
@@ -106,6 +113,9 @@
       }
     },
     computed: {
+      breadCrumbList() {
+        return this.$store.state.app.breadCrumbList
+      },
       rotateIcon() {
         return [
           'menu-icon', this.isCollapsed ? 'rotate-icon' : ''
@@ -116,6 +126,13 @@
       },
     },
     methods: {
+      ...mapMutations([
+        'setBreadCrumb',
+        'setHomeRoute'
+      ]),
+      ...mapActions([
+
+      ]),
       turnToPage(route) {
         let {name, params, query} = {}
         if (typeof route === 'string') name = route
@@ -138,6 +155,16 @@
         this.$refs.sider.toggleCollapse();
       }
     },
+    watch: {
+      '$route'(newRoute) {
+        const {name, params, query, meta} = newRoute
+        this.setBreadCrumb(newRoute)
+      }
+    },
+    mounted() {
+      this.setHomeRoute(routers);
+      this.setBreadCrumb(this.$route)
+    }
   }
 </script>
 

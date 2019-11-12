@@ -1,4 +1,79 @@
-import { forEach, hasOneOf, objEqual } from '@/libs/tools'
+import {forEach, hasOneOf, objEqual} from '@/libs/tools'
+import config from '@/config'
+const { title } = config
+
+export const setTitle = (routeItem, vm) => {
+  const handledRoute = getRouteTitleHandled(routeItem)
+  const pageTitle = showTitle(handledRoute, vm)
+  const resTitle = pageTitle ? `${title} - ${pageTitle}` : title
+  window.document.title = resTitle
+}
+
+export const getRouteTitleHandled = (route) => {
+  let router = { ...route }
+  let meta = { ...route.meta }
+  let title = ''
+  if (meta.title) {
+    if (typeof meta.title === 'function') {
+      meta.__titleIsFunction__ = true
+      title = meta.title(router)
+    } else title = meta.title
+  }
+  meta.title = title
+  router.meta = meta
+  return router
+}
+
+export const getHomeRoute = (routers, homeName = 'home') => {
+  let i = -1
+  let len = routers.length
+  let homeRoute = {}
+  while (++i < len) {
+    let item = routers[i];
+    if (item.children && item.children.length) {
+      let res = getHomeRoute(item.children, homeName)
+      if (res.name) return res
+    } else {
+      if (item.name === homeName) homeRoute = item
+    }
+  }
+  console.log(homeRoute)
+  return homeRoute
+}
+
+export const showTitle = (item, vm) => {
+  let { title, __titleIsFunction__ } = item.meta
+  if (!title) return
+  title = (item.meta && item.meta.title) || item.name
+  return title
+}
+
+export const getBreadCrumbList = (route, homeRoute) => {
+  let homeItem = {...homeRoute, icon: homeRoute.meta.icon}
+  let routeMatched = route.matched
+  if (routeMatched.some(item => item.name === homeRoute.name)) return [homeItem]
+  let res = routeMatched.filter(item => {
+    return item.meta === undefined || !item.meta.hideInBread
+  }).map(item => {
+    let meta = {...item.meta}
+    if (meta.title && typeof meta.title === 'function') {
+      meta.__titleIsFunction__ = true
+      meta.title = meta.title(route)
+    }
+    let obj = {
+      icon: (item.meta && item.meta.icon) || '',
+      name: item.name,
+      meta: item.meta
+    }
+    return obj
+  })
+
+  res = res.filter(i => {
+    return !i.meta.hideInMenu
+  })
+  return [{...homeItem, to: homeRoute.path}, ...res]
+}
+
 
 /**
  * @param {Array} list 通过路由列表得到菜单列表

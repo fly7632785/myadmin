@@ -21,7 +21,7 @@ export default [
     component: Main,
     children: [
       {
-        path: 'home',
+        path: '/home',
         name: 'home',
         meta: {
           title: "首页",
@@ -35,6 +35,7 @@ export default [
     path: '/test',
     name: 'test',
     meta: {
+      hideInBread: true,
       title: '测试',
       icon: 'ios-crop'
     },
@@ -61,6 +62,15 @@ export default [
     ]
   },
   {
+    path: '/test3',
+    name: 'test3',
+    meta: {
+      title: '测试3',
+      icon: 'md-watch'
+    },
+    component: Main
+  },
+  {
     path: '/logout',
     name: 'logout',
     meta: {
@@ -73,7 +83,8 @@ export default [
     path: '/401',
     name: 'error_401',
     meta: {
-      hideInMenu: true
+      title: "error 401测试",
+      icon: 'md-water'
     },
     component: () => import('@/view/error-page/401.vue')
   },
