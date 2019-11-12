@@ -4,7 +4,9 @@ export default [
   {
     path: '/login',
     name: 'login',
+    title: '登录',
     meta: {
+      hideInMenu: true,
       title: '登录',
     },
     component: () => import('@/view/login/login.vue')
@@ -14,11 +16,12 @@ export default [
     name: '_home',
     meta: {
       title: '主页',
+      icon: 'md-home'
     },
     component: Main,
     children: [
       {
-        path: '/home',
+        path: 'home',
         name: 'home',
         meta: {
           title: "首页",
@@ -33,38 +36,38 @@ export default [
     name: 'test',
     meta: {
       title: '测试',
+      icon: 'ios-crop'
     },
     component: Main,
     children: [
       {
-        path: '/test1',
+        path: 'test1',
         name: 'test1',
         meta: {
           title: "测试1",
-          icon: 'md-home'
+          icon: 'logo-buffer'
         },
         component: () => import('@/view/test/test1.vue')
-      }
-    ]
-  },
-  {
-    path: '/test',
-    name: 'test',
-    meta: {
-      title: '测试',
-    },
-    component: Main,
-    children: [
+      },
       {
-        path: '/test2',
+        path: 'test2',
         name: 'test2',
         meta: {
           title: "测试2",
-          icon: 'md-home'
+          icon: 'ios-brush'
         },
         component: () => import('@/view/test/test2.vue')
       }
     ]
+  },
+  {
+    path: '/logout',
+    name: 'logout',
+    meta: {
+      title: '退出登录',
+      icon: 'md-close'
+    },
+    component: () => import('@/view/login/login.vue')
   },
   {
     path: '/401',

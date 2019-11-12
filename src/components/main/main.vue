@@ -5,110 +5,72 @@
         <img v-show="!isCollapsed" :src="maxLogo" class="max-logo" key="max-logo"/>
         <img v-show="isCollapsed" :src="minLogo" class="min-logo" key="min-logo"/>
       </div>
-      <!--展开状态-->
-      <Menu :active-name="$route.name" theme="dark" width="auto" :open-names="['1']" v-show="!isCollapsed" @on-select="turnToPage">
-        <Submenu name="1">
-          <template slot="title">
-            <Icon type="ios-navigate"></Icon>
-            <Span>菜单1</Span>
+      <!--      展开状态-->
+      <Menu class="open-menu" :active-name="$route.name" theme="dark" width="auto" v-show="!isCollapsed" @on-select="turnToPage">
+        <template v-for="item in menuList">
+          <!--          有children且只有1个-->
+          <template v-if="item.children && item.children.length===1">
+            <MenuItem :name='item.children[0].name'>
+              <Icon :type="item.children[0].meta.icon"></Icon>
+              <span>{{item.children[0].meta.title}}</span>
+            </MenuItem>
           </template>
-          <MenuItem name="home">
-            <Icon class='micon' type="ios-navigate"></Icon>
-            <Span>首页</Span>
-          </MenuItem>
-          <MenuItem name="login">
-            <Icon type="ios-navigate"></Icon>
-            <Span>退出登录</Span>
-          </MenuItem>
-        </Submenu>
-        <Submenu name="2">
-          <template slot="title">
-            <Icon type="ios-navigate"></Icon>
-            <Span>测试</Span>
+          <template v-else>
+            <!--            有children 大于1个嵌套-->
+            <template v-if="item.children && item.children.length>1">
+              <Submenu :name='item.name'>
+                <template slot="title">
+                  <Icon :type="item.meta.icon || ''"/>
+                  <Span>{{item.meta.title }}</Span>
+                </template>
+                <template v-for="subitem in item.children">
+                  <MenuItem :name="subitem.name">
+                    <Icon :type="subitem.meta.icon"></Icon>
+                    <Span>{{subitem.meta.title }}</Span>
+                  </MenuItem>
+                </template>
+              </Submenu>
+            </template>
+            <!--            没有children-->
+            <template v-else>
+              <MenuItem :name='item.name'>
+                <Icon :type="item.meta.icon"></Icon>
+                <Span>{{item.meta.title }}</Span>
+              </MenuItem>
+            </template>
+
           </template>
-          <MenuItem name="test1">
-            <Icon type="ios-navigate"></Icon>
-            <Span>测试1</Span>
-          </MenuItem>
-          <MenuItem name="test2">
-            <Icon type="ios-navigate"></Icon>
-            <Span>测试2</Span>
-          </MenuItem>
-        </Submenu>
-        <Submenu name="3">
-          <template slot="title">
-            <Icon type="ios-navigate"></Icon>
-            <Span>菜单3</Span>
-          </template>
-          <MenuItem name="3-1">
-            <Icon type="ios-navigate"></Icon>
-            <Span>菜单3-1</Span>
-          </MenuItem>
-          <MenuItem name="3-2">
-            <Icon type="ios-navigate"></Icon>
-            <Span>菜单3-2</Span>
-          </MenuItem>
-        </Submenu>
+
+        </template>
       </Menu>
-      <!-- 非展开状态     -->
-      <div v-show="isCollapsed">
-        <Dropdown ref="dropdown" placement="right-start">
-          <a type="text" class="drop-menu-a">
-            <Icon type="ios-navigate" class="menu-icon" size="30"></Icon>
-          </a>
-          <DropdownMenu slot="list">
-            <DropdownItem>
-              <a type="text">
-                <Icon type="ios-navigate"></Icon>
-                <span>菜单1-1</span>
+      <!--      收缩状态-->
+      <div v-show="isCollapsed" class="close-menu">
+        <template v-for="item in menuList">
+          <template v-if="item.children && item.children.length>0">
+            <Dropdown placement="right-start" @on-click="turnToPage" class='dropdown'>
+              <a type="text" class="drop-menu-a">
+                <Icon :type="item.meta.icon"></Icon>
               </a>
-            </DropdownItem>
-            <DropdownItem>
-              <a type="text">
-                <Icon type="ios-navigate"></Icon>
-                <span>菜单1-2</span>
+              <template v-for="subitem in item.children">
+                <DropdownMenu slot="list">
+                  <DropdownItem :name="subitem.name">
+                    <a type="text" class="drop-item-a">
+                      <Icon :type="subitem.meta.icon"></Icon>
+                      <span>{{subitem.meta.title}}</span>
+                    </a>
+                  </DropdownItem>
+                </DropdownMenu>
+              </template>
+            </Dropdown>
+          </template>
+          <template v-else>
+            <Tooltip transfer placement="right" :content="item.meta.title">
+              <a @click="turnToPage(item.name)" type="text" class="drop-menu-a">
+                <Icon :type="item.meta.icon"></Icon>
               </a>
-            </DropdownItem>
-            <DropdownItem>
-              <a type="text">
-                <Icon type="ios-navigate"></Icon>
-                <span>菜单1-3</span>
-              </a>
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-        <Dropdown ref="dropdown" placement="right-start">
-          <a type="text" class="drop-menu-a">
-            <Icon type="ios-navigate" class="menu-icon" size="30"></Icon>
-          </a>
-          <DropdownMenu slot="list">
-            <DropdownItem>
-              <a type="text">
-                <Icon type="ios-navigate"></Icon>
-                <span>菜单2-1</span>
-              </a>
-            </DropdownItem>
-            <DropdownItem>
-              <a type="text">
-                <Icon type="ios-navigate"></Icon>
-                <span>菜单2-2</span>
-              </a>
-            </DropdownItem>
-            <DropdownItem>
-              <a type="text">
-                <Icon type="ios-navigate"></Icon>
-                <span>菜单2-3</span>
-              </a>
-            </DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-        <Dropdown ref="dropdown" placement="right-start">
-          <Tooltip transfer placement="right" content="只有一个菜单">
-            <a type="text" class="drop-menu-a">
-              <Icon type="ios-navigate" class="menu-icon" size="30"></Icon>
-            </a>
-          </Tooltip>
-        </Dropdown>
+            </Tooltip>
+          </template>
+        </template>
       </div>
     </Sider>
     <layout>
@@ -119,7 +81,7 @@
               size="24"></Icon>
       </Header>
       <Content class="content">
-        <keep-alive >
+        <keep-alive>
           <router-view/>
         </keep-alive>
       </Content>
@@ -149,13 +111,13 @@
           'menu-icon', this.isCollapsed ? 'rotate-icon' : ''
         ]
       },
-      menuList () {
+      menuList() {
         return this.$store.getters.menuList
       },
     },
     methods: {
-      turnToPage (route) {
-        let { name, params, query } = {}
+      turnToPage(route) {
+        let {name, params, query} = {}
         if (typeof route === 'string') name = route
         else {
           name = route.name

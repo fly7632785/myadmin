@@ -7,8 +7,6 @@
 
   .sider {
     .logo-con {
-      //text-align: center;
-      //vertical-align: center;
       height: 74px;
       padding: 10px;
       //fex 居中方案
@@ -16,64 +14,80 @@
       justify-content: center;
       align-items: center;
 
-      //position: relative;
       .min-logo {
-        //display: inline;
         height: 54px;
       }
 
       .max-logo {
         height: 54px;
-        //display: inline;
-        //position: absolute;
-        //top: 50%;
-        //left: 50%;
-        //transform: translate(-50%, -50%);
       }
     }
 
-    .menu-item {
-      margin: 0 auto;
-    }
+    .close-menu {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
 
-    .menu-item span {
-      display: inline-block;
-      overflow: hidden;
-      width: 69px;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      vertical-align: middle;
-      transition: width .2s ease .2s;
-    }
-
-    a.drop-menu-a {
-      display: inline-block;
-      padding: 6px 15px;
-      width: 100%;
-      text-align: center;
-      color: #495060;
-    }
-
-    .ivu-tooltip{
-      width: 100%;
-      .ivu-tooltip-rel{
+      .drop-menu-a {
+        color: #f8f8f9;
+        display: inline-block;
+        padding: 10px 0;
         width: 100%;
-      }
-      .ivu-tooltip-popper .ivu-tooltip-content{
-        .ivu-tooltip-arrow{
-          border-right-color: #fff;
-        }
-        .ivu-tooltip-inner{
-          background: #fff;
-          color: #495060;
+        text-align: center;
+        font-size: 15px;
+
+        i {
+          font-size: 26px;
         }
       }
-    }
-    .ivu-dropdown{
-      width: 100%;
-      .ivu-dropdown-rel a{
-        width: 100%;
+
+      .drop-item-a {
+        display: flex;
+        width: 150px;
+        align-items: center;
+        font-size: 13px;
+
+        i {
+          font-size: 17px;
+        }
       }
+
+      .dropdown {
+        width: 100%;
+
+        .ivu-select-dropdown {
+          width: 100px;
+          margin-left: 5px;
+
+          .ivu-dropdown-transfer {
+            max-height: 400px;
+          }
+        }
+      }
+
+      .ivu-tooltip {
+        width: 100%;
+
+        .ivu-tooltip-rel {
+          width: 100%;
+          justify-content: center;
+          align-items: center;
+          display: flex;
+        }
+
+        .ivu-tooltip-popper .ivu-tooltip-content {
+          .ivu-tooltip-arrow {
+            border-right-color: #fff;
+          }
+
+          .ivu-tooltip-inner {
+            background: #fff;
+            color: #495060;
+          }
+        }
+      }
+
     }
   }
 
