@@ -14,6 +14,7 @@ export default [
   {
     path: '/',
     name: '_home',
+    redirect: '/home',
     meta: {
       title: '主页',
       icon: 'md-home'
@@ -57,7 +58,7 @@ export default [
           title: "测试2",
           icon: 'ios-brush'
         },
-        component: () => import('@/view/test/test2.vue')
+        component: () => import('@/view/test/test2.vue'),
       }
     ]
   },

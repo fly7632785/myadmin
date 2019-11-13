@@ -6,7 +6,7 @@
         <img v-show="isCollapsed" :src="minLogo" class="min-logo" key="min-logo"/>
       </div>
       <!--      展开状态-->
-      <Menu class="open-menu" :active-name="$route.name" theme="dark" width="auto" v-show="!isCollapsed"
+      <Menu class="open-menu" ref="menu" :active-name="$route.name" theme="dark" width="auto" v-show="!isCollapsed"
             @on-select="turnToPage">
         <template v-for="item in menuList">
           <!--          有children且只有1个-->
@@ -108,7 +108,7 @@
   export default {
     name: "Main",
     mixins: [mixin],
-    components:{
+    components: {
       customBreadCrumb,
       User,
       Fullscreen,
@@ -118,7 +118,7 @@
         isCollapsed: false,
         minLogo,
         maxLogo,
-        isFullscreen:false
+        isFullscreen: false
       }
     },
     computed: {
@@ -133,19 +133,19 @@
           'menu-icon', this.isCollapsed ? 'rotate-icon' : ''
         ]
       },
-      hasReadErrorPage () {
+      hasReadErrorPage() {
         return this.$store.state.app.hasReadErrorPage
       },
       menuList() {
         return this.$store.getters.menuList
       },
-      unreadCount () {
+      unreadCount() {
         return this.$store.state.user.unreadCount
       },
-      userAvatar () {
+      userAvatar() {
         return this.$store.state.user.avatarImgPath
       },
-      userName(){
+      userName() {
         return this.$store.state.user.userName
       }
     },
@@ -154,9 +154,7 @@
         'setBreadCrumb',
         'setHomeRoute'
       ]),
-      ...mapActions([
-
-      ]),
+      ...mapActions([]),
       turnToPage(route) {
         let {name, params, query} = {}
         if (typeof route === 'string') name = route
@@ -173,6 +171,7 @@
           name,
           params,
           query
+
         })
       },
       collapsedSider() {
@@ -188,7 +187,10 @@
     mounted() {
       this.setHomeRoute(routers);
       this.setBreadCrumb(this.$route)
-    }
+      console.log(this.$route)
+      console.log(this.$router)
+    },
+
   }
 </script>
 
