@@ -79,6 +79,10 @@
         <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin:'0 20px'}" type='md-menu'
               size="24"></Icon>
         <custom-bread-crumb show-icon style="margin-left: 30px;" :list="breadCrumbList"></custom-bread-crumb>
+        <div class="header-right">
+          <user :message-unread-count="10" :user-avatar="userAvatar" :user-name="userName"/>
+          <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
+        </div>
       </Header>
       <Content class="content">
         <keep-alive>
@@ -94,25 +98,33 @@
   import './main.less'
   import minLogo from '@/assets/images/logo-min.jpg'
   import maxLogo from '@/assets/images/logo.jpg'
-  import {mapActions, mapMutations} from "vuex";
+  import {mapActions, mapGetters, mapMutations} from "vuex";
   import routers from '@/router/routers'
   import mixin from './mixin'
   import customBreadCrumb from './custom-bread-crumb'
+  import User from './user'
+  import Fullscreen from './fullscreen'
 
   export default {
     name: "Main",
     mixins: [mixin],
     components:{
       customBreadCrumb,
+      User,
+      Fullscreen,
     },
     data() {
       return {
         isCollapsed: false,
         minLogo,
         maxLogo,
+        isFullscreen:false
       }
     },
     computed: {
+      ...mapGetters([
+        'errorCount'
+      ]),
       breadCrumbList() {
         return this.$store.state.app.breadCrumbList
       },
@@ -121,9 +133,21 @@
           'menu-icon', this.isCollapsed ? 'rotate-icon' : ''
         ]
       },
+      hasReadErrorPage () {
+        return this.$store.state.app.hasReadErrorPage
+      },
       menuList() {
         return this.$store.getters.menuList
       },
+      unreadCount () {
+        return this.$store.state.user.unreadCount
+      },
+      userAvatar () {
+        return this.$store.state.user.avatarImgPath
+      },
+      userName(){
+        return this.$store.state.user.userName
+      }
     },
     methods: {
       ...mapMutations([

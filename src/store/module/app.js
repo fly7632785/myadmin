@@ -1,4 +1,3 @@
-import router from '@/router'
 import routers from '@/router/routers'
 import config from '@/config'
 import {
@@ -29,5 +28,7 @@ export default {
       state.homeRoute = getHomeRoute(routes, homeName)
     },
   },
-  actions: {}
+  actions: {
+
+  }
 }

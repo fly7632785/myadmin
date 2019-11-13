@@ -11,3 +11,27 @@ export const login = ({userName, password}) => {
     method: 'post'
   })
 }
+
+export const getUserInfo =(token)=>{
+  return axios.request({
+    url:'get_info',
+    params:{
+      token
+    },
+    method:'get'
+  })
+}
+
+export const logout=(token)=>{
+  return axios.request({
+    url:'logout',
+    method:'post'
+  })
+}
+
+export const getUnreadCount=()=>{
+  return axios.request({
+    url:'message/count',
+    method:'get'
+  })
+}
