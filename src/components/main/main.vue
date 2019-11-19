@@ -6,7 +6,8 @@
         <img v-show="isCollapsed" :src="minLogo" class="min-logo" key="min-logo"/>
       </div>
       <!--      展开状态-->
-      <Menu class="open-menu" ref="menu" :active-name="$route.name" theme="dark" width="auto" v-show="!isCollapsed"
+      <Menu class="open-menu" ref="menu" :active-name="$route.name" :open-names="openedNames" theme="dark" width="auto"
+            v-show="!isCollapsed"
             @on-select="turnToPage">
         <template v-for="item in menuList">
           <!--          有children且只有1个-->
@@ -85,9 +86,16 @@
         </div>
       </Header>
       <Content class="content">
-        <keep-alive>
-          <router-view/>
-        </keep-alive>
+        <Layout class="main-layout-con">
+          <div class="tag-nav-wrapper">
+            <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"></tags-nav>
+          </div>
+          <Content class="content-wrapper">
+            <keep-alive>
+              <router-view/>
+            </keep-alive>
+          </Content>
+        </Layout>
       </Content>
       <Footer class="footer">Footer</Footer>
     </layout>
@@ -104,6 +112,9 @@
   import customBreadCrumb from './custom-bread-crumb'
   import User from './user'
   import Fullscreen from './fullscreen'
+  import TagsNav from './tagsnav'
+  import {getNewTagList, routeEqual} from '@/libs/util'
+  import {getUnion} from "@/libs/tools";
 
   export default {
     name: "Main",
@@ -112,19 +123,24 @@
       customBreadCrumb,
       User,
       Fullscreen,
+      TagsNav
     },
     data() {
       return {
         isCollapsed: false,
         minLogo,
         maxLogo,
-        isFullscreen: false
+        isFullscreen: false,
+        openedNames: []
       }
     },
     computed: {
       ...mapGetters([
         'errorCount'
       ]),
+      tagNavList() {
+        return this.$store.state.app.tagNavList
+      },
       breadCrumbList() {
         return this.$store.state.app.breadCrumbList
       },
@@ -152,9 +168,19 @@
     methods: {
       ...mapMutations([
         'setBreadCrumb',
-        'setHomeRoute'
+        'setHomeRoute',
+        'setTagsNavList',
+        'addTag',
+        'closeTag'
       ]),
       ...mapActions([]),
+      getOpenedNamesByActiveName(name) {
+        return this.$route.matched.map(item => item.name).filter(item => item !== name)
+      },
+      updateOpenName(name) {
+        if (name === this.$config.homeName) this.openedNames = []
+        else this.openedNames = this.getOpenedNamesByActiveName(name)
+      },
       turnToPage(route) {
         let {name, params, query} = {}
         if (typeof route === 'string') name = route
@@ -179,23 +205,46 @@
           this.$refs.menu.currentActiveName = this.$route.name
         })
       },
+      handleClick(item) {
+        this.turnToPage(item)
+      },
       collapsedSider() {
         this.$refs.sider.toggleCollapse();
+      },
+      handleCloseTag(res, type, route) {
+        if (type !== 'others') {
+          if (type === 'all') {
+            this.turnToPage(this.$config.homeName)
+          } else {
+            if (routeEqual(this.$route, route)) {
+              this.closeTag(tag)
+            }
+          }
+        }
+        this.setTagsNavList(res)
       }
     },
     watch: {
       '$route'(newRoute) {
         const {name, params, query, meta} = newRoute
         this.setBreadCrumb(newRoute)
+        this.setTagsNavList(getNewTagList(this.tagNavList, newRoute))
+        this.updateOpenName(name)
+      },
+      openedNames() {
+        this.$nextTick(() => {
+          this.$refs.menu.updateOpened()
+        })
       }
     },
     mounted() {
+      this.setTagsNavList()
       this.setHomeRoute(routers);
       this.setBreadCrumb(this.$route)
       console.log(this.$route)
       console.log(this.$router)
+      this.openedNames = getUnion(this.openedNames, this.getOpenedNamesByActiveName(name))
     },
-
   }
 </script>
 

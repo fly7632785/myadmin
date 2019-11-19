@@ -1,5 +1,7 @@
 <template>
-  <span>主页</span>
+  <div>
+    主页
+  </div>
 </template>
 
 <script>
@@ -10,4 +12,7 @@
 
 <style scoped>
 
+  div {
+    background: #fff;
+  }
 </style>

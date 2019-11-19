@@ -46,6 +46,7 @@ export default [
         path: 'test1',
         name: 'test1',
         meta: {
+          beforeCloseName: 'before_close_normal',
           title: "测试1",
           icon: 'logo-buffer'
         },
@@ -59,7 +60,79 @@ export default [
           icon: 'ios-brush'
         },
         component: () => import('@/view/test/test2.vue'),
-      }
+      },
+      {
+        path: 'test3',
+        name: 'test3',
+        meta: {
+          title: "测试3",
+          icon: 'ios-brush'
+        },
+        component: () => import('@/view/test/test2.vue'),
+      },
+      {
+        path: 'test4',
+        name: 'test4',
+        meta: {
+          title: "测试4",
+          icon: 'ios-brush'
+        },
+        component: () => import('@/view/test/test2.vue'),
+      },
+      {
+        path: 'test5',
+        name: 'test5',
+        meta: {
+          title: "测试5",
+          icon: 'ios-brush'
+        },
+        component: () => import('@/view/test/test2.vue'),
+      },
+      {
+        path: 'test6',
+        name: 'test6',
+        meta: {
+          title: "测试6",
+          icon: 'ios-brush'
+        },
+        component: () => import('@/view/test/test2.vue'),
+      },
+      {
+        path: 'test7',
+        name: 'test7',
+        meta: {
+          title: "测试7",
+          icon: 'ios-brush'
+        },
+        component: () => import('@/view/test/test2.vue'),
+      },
+      {
+        path: 'test8',
+        name: 'test8',
+        meta: {
+          title: "测试8",
+          icon: 'ios-brush'
+        },
+        component: () => import('@/view/test/test2.vue'),
+      },
+      {
+        path: 'test9',
+        name: 'test9',
+        meta: {
+          title: "测试9",
+          icon: 'ios-brush'
+        },
+        component: () => import('@/view/test/test2.vue'),
+      },
+      {
+        path: 'test10',
+        name: 'test10',
+        meta: {
+          title: "测试10",
+          icon: 'ios-brush'
+        },
+        component: () => import('@/view/test/test2.vue'),
+      },
     ]
   },
   {

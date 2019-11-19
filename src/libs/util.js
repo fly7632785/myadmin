@@ -1,12 +1,14 @@
 import {forEach, hasOneOf, objEqual} from '@/libs/tools'
 import config from '@/config'
-const { title,cookieExpires} = config
+
+const {title, cookieExpires} = config
 import Cookies from 'js-cookie'
+
 export const TOKEN_KEY = 'token'
 
 
 export const setToken = (token) => {
-  Cookies.set(TOKEN_KEY, token, { expires: cookieExpires || 1 })
+  Cookies.set(TOKEN_KEY, token, {expires: cookieExpires || 1})
 }
 
 export const getToken = () => {
@@ -38,8 +40,8 @@ export const setTitle = (routeItem, vm) => {
 }
 
 export const getRouteTitleHandled = (route) => {
-  let router = { ...route }
-  let meta = { ...route.meta }
+  let router = {...route}
+  let meta = {...route.meta}
   let title = ''
   if (meta.title) {
     if (typeof meta.title === 'function') {
@@ -69,7 +71,7 @@ export const getHomeRoute = (routers, homeName = 'home') => {
 }
 
 export const showTitle = (item, vm) => {
-  let { title, __titleIsFunction__ } = item.meta
+  let {title, __titleIsFunction__} = item.meta
   if (!title) return
   title = (item.meta && item.meta.title) || item.name
   return title
@@ -101,6 +103,60 @@ export const getBreadCrumbList = (route, homeRoute) => {
   return [{...homeItem, to: homeRoute.path}, ...res]
 }
 
+
+export const getNextRoute = (list, route) => {
+  let res = {}
+  if (list.length === 2) {
+    res = getHomeRoute(list)
+  } else {
+    const index = list.findIndex(item => routeEqual(item, route))
+    if (index === list.length - 1) {
+      res = list[list.length - 2]
+    } else {
+      res = list[index + 1]
+    }
+  }
+  return res
+}
+
+export const routeEqual = (route1, route2) => {
+  const param1 = route1.params || {}
+  const param2 = route2.params || {}
+  const query1 = route1.query || {}
+  const query2 = route2.query || {}
+  return (route1.name === route2.name) && objEqual(param1, param2) && objEqual(query1, query2)
+}
+
+
+/**
+ * @param {*} list 现有标签导航列表
+ * @param {*} newRoute 新添加的路由原信息对象
+ * @description 如果该newRoute已经存在则不再添加
+ */
+export const getNewTagList = (list, newRoute) => {
+  const {name, path, meta} = newRoute
+  let newList = [...list]
+  if (newList.findIndex(item => item.name === name) >= 0) {
+    return newList
+  } else {
+    newList.push({name, path, meta})
+  }
+  return newList
+}
+
+/**
+ * @description 本地存储和获取标签导航列表
+ */
+export const setTagNavListInLocalstorage = list => {
+  localStorage.tageNavList = JSON.stringify(list)
+}
+/**
+ * @returns {Array} 其中的每个元素只包含路由原信息中的name, path, meta三项
+ */
+export const getTagNavListFromLocalstorage = () => {
+  const list = localStorage.tageNavList
+  return list ? JSON.parse(list) : []
+}
 
 /**
  * @param {Array} list 通过路由列表得到菜单列表
