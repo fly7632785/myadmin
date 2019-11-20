@@ -1,6 +1,17 @@
 <template>
   <div style="background: #fff">
-    test2
+
+    <div style="flex-direction: row;display: flex">
+      <div style="width: 50px;height: 50px;background-color: #67647D">
+
+      </div>
+      <div style="flex: 1;background-color: firebrick">
+
+      </div>
+      <div style="width: 50px;height: 50px;background-color: #67647D">
+
+      </div>
+    </div>
   </div>
 </template>
 

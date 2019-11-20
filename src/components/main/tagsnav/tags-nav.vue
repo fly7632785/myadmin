@@ -89,11 +89,6 @@
       handleScroll(offset) {
         const outerWidth = this.$refs.scrollOuter.offsetWidth
         const bodyWidth = this.$refs.scrollBody.offsetWidth
-
-        console.log("outerWidth:" + outerWidth)
-        console.log("bodyWidth:" + bodyWidth)
-        console.log("offset:" + offset)
-
         if (offset > 0) {
           this.tagBodyLeft = Math.min(0, this.tagBodyLeft + offset)
         } else {
@@ -107,7 +102,6 @@
             this.tagBodyLeft = 0
           }
         }
-        console.log("tagBodyLeft:" + this.tagBodyLeft)
       },
       showTitleInside(item) {
         return showTitle(item, this)
@@ -121,30 +115,37 @@
 
         console.log("outerWidth:" + outerWidth)
         console.log("bodyWidth:" + bodyWidth)
+        console.log("tag offsetLeft:" + tag.offsetLeft)
+        console.log("tag offsetWidth:" + tag.offsetWidth)
+        console.log("tag offsetParent:" + tag.offsetParent)
 
         if (bodyWidth < outerWidth) {
           this.tagBodyLeft = 0
-        } else if (tag.offsetLeft < -this.tagBodyLeft) {
-          // 标签在可视区域左侧
+        } else if (tag.offsetLeft < -this.tagBodyLeft || tag.offsetLeft === 0) {
+          console.log("标签在可视区域左侧")
           this.tagBodyLeft = -tag.offsetLeft
-        } else if (tag.offsetLeft > -this.tagBodyLeft && tag.offsetLeft + tag.offsetWidth < -this.tagBodyLeft + outerWidth) {
-          // 标签在可视区域
-          this.tagBodyLeft = Math.min(0, outerWidth - tag.offsetWidth - tag.offsetLeft)
+          } else if (tag.offsetLeft > -this.tagBodyLeft && tag.offsetLeft + tag.offsetWidth < -this.tagBodyLeft + outerWidth) {
+        // } else if (tag.offsetLeft > 0 && tag.offsetLeft + tag.offsetWidth < outerWidth) {
+          console.log("标签在可视区域")
+          // this.tagBodyLeft = Math.min(0, outerWidth - tag.offsetWidth - tag.offsetLeft)
         } else {
-          // 标签在可视区域右侧
-          this.tagBodyLeft = -(tag.offsetLeft - (outerWidth - tag.offsetWidth))
+          console.log("标签在可视区域右侧")
+          // this.tagBodyLeft = -(tag.offsetLeft - (outerWidth - tag.offsetWidth))
+          this.tagBodyLeft = -((tag.offsetLeft - outerWidth) + (bodyWidth - tag.offsetLeft))
         }
-
         console.log("tagBodyLeft:" + this.tagBodyLeft)
       },
       handleClose(current) {
         if (current.meta && current.meta.beforeCloseName && current.meta.beforeCloseName in beforeClose) {
+          console.log("if close:" + current.meta.beforeCloseName)
           new Promise(beforeClose[current.meta.beforeCloseName]).then(close => {
+            console.log("close:" + close)
             if (close) {
               this.close(current)
             }
           })
         } else {
+          console.log("else close:" + current)
           this.close(current)
         }
       },

@@ -217,7 +217,7 @@
             this.turnToPage(this.$config.homeName)
           } else {
             if (routeEqual(this.$route, route)) {
-              this.closeTag(tag)
+              this.closeTag(route)
             }
           }
         }
