@@ -85,19 +85,17 @@
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
         </div>
       </Header>
-      <Content class="main-content-con">
-        <Layout class="main-layout-con">
-          <div class="tag-nav-wrapper">
-            <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"></tags-nav>
-          </div>
-          <Content class="content-wrapper">
-            <keep-alive>
-              <router-view/>
-            </keep-alive>
-          </Content>
-        </Layout>
-      </Content>
-      <Footer class="footer">Footer</Footer>
+      <Layout class="main-layout-con">
+        <div class="tag-nav-wrapper">
+          <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"></tags-nav>
+        </div>
+        <Content class="content-wrapper">
+          <keep-alive>
+            <router-view/>
+          </keep-alive>
+        </Content>
+      </Layout>
+<!--      <Footer class="footer">Footer</Footer>-->
     </layout>
   </Layout>
 </template>
