@@ -124,14 +124,19 @@
     }
   }
 
-  .content {
-    background-color: #fff;
+  .main-layout-con {
+    height: 100%;
+    overflow: hidden;
+  }
 
-    .main1 {
-      display: flex;
-      flex-direction: row;
-      width: 100%;
-    }
+  .main-content-con {
+    overflow: hidden;
+  }
+
+  .content-wrapper {
+    padding: 10px;
+    height: ~"calc(100% - 80px)";
+    overflow: auto;
   }
 
   .footer {

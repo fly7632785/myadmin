@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <card>
     主页
-  </div>
+  </card>
 </template>
 
 <script>

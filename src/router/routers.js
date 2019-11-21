@@ -68,7 +68,7 @@ export default [
           title: "测试3",
           icon: 'ios-brush'
         },
-        component: () => import('@/view/test/test2.vue'),
+        component: () => import('@/view/test/test3.vue'),
       },
       {
         path: 'test4',

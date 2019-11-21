@@ -9,7 +9,7 @@
       <li v-for="(item, key) of menuList" @click="handleTagsOption(key)" :key="key">{{item}}</li>
     </ul>
     <div class="scroll-outer" ref="scrollOuter" @DOMMouseScroll="handlescroll" @mousewheel="handlescroll">
-      <div ref="scrollBody" class="scroll-body" :style="{marginLeft:tagBodyLeft+'px'}">
+      <div ref="scrollBody" class="scroll-body" :style="{left:tagBodyLeft+'px'}">
         <transition-group name="taglist-moving-animation">
           <Tag
             v-for="(item,index) in list"
