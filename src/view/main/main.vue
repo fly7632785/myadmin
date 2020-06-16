@@ -1,12 +1,25 @@
 <template>
-  <card>
+  <div>
     主页
-  </card>
+  </div>
 </template>
-
 <script>
+
+  import './main.less'
+  import {mapActions} from "vuex";
+
   export default {
-    name: "main"
+    name: "main",
+    data() {
+      return{
+      }
+    },
+    methods: {
+      ...mapActions([
+      ]),
+    },
+    mounted() {
+    }
   }
 </script>
 

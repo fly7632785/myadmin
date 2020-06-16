@@ -82,6 +82,8 @@
         <custom-bread-crumb show-icon style="margin-left: 30px;" :list="breadCrumbList"></custom-bread-crumb>
         <div class="header-right">
           <user :message-unread-count="10" :user-avatar="userAvatar" :user-name="userName"/>
+          <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader"
+                       :has-read="hasReadErrorPage" :count="errorCount"></error-store>
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
         </div>
       </Header>
@@ -95,7 +97,7 @@
           </keep-alive>
         </Content>
       </Layout>
-<!--      <Footer class="footer">Footer</Footer>-->
+      <!--      <Footer class="footer">Footer</Footer>-->
     </layout>
   </Layout>
 </template>
@@ -110,6 +112,7 @@
   import customBreadCrumb from './custom-bread-crumb'
   import User from './user'
   import Fullscreen from './fullscreen'
+  import ErrorStore from './error-store'
   import TagsNav from './tagsnav'
   import {getNewTagList, routeEqual} from '@/libs/util'
   import {getUnion} from "@/libs/tools";
@@ -120,6 +123,7 @@
     components: {
       customBreadCrumb,
       User,
+      ErrorStore,
       Fullscreen,
       TagsNav
     },
@@ -226,6 +230,7 @@
       '$route'(newRoute) {
         const {name, params, query, meta} = newRoute
         this.setBreadCrumb(newRoute)
+        console.log("newRoute", newRoute)
         this.setTagsNavList(getNewTagList(this.tagNavList, newRoute))
         this.updateOpenName(name)
       },
@@ -238,6 +243,10 @@
     mounted() {
       this.setTagsNavList()
       this.setHomeRoute(routers);
+      const {name, params, query, meta} = this.$route
+      this.addTag({
+        route: {name, params, query, meta}
+      })
       this.setBreadCrumb(this.$route)
       console.log(this.$route)
       console.log(this.$router)

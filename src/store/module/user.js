@@ -2,7 +2,8 @@ import {
   login,
   getUserInfo,
   getUnreadCount,
-  logout
+  getAllNowGps,
+  logout,
 } from '@/api/user'
 import {setToken,getToken} from "@/libs/util";
 
@@ -73,10 +74,12 @@ export default {
           userName,
           password
         }).then(res => {
-          const data = res.data
+          const data = res
+          console.log(data)
           commit('setToken', data.token)
           resolve()
         }).catch(err => {
+          console.log("login error:"+JSON.stringify(err))
           reject(err)
         })
       })
@@ -84,30 +87,44 @@ export default {
     // 退出登录
     handleLogOut ({state,commit}) {
       return new Promise((resolve, reject) => {
-        logout(state.token).then(() => {
-          commit('setToken', '')
-          commit('setAccess', [])
-          resolve()
-        }).catch(err => {
-          reject(err)
-        })
+        // logout(state.token).then(() => {
+        //   commit('setToken', '')
+        //   commit('setAccess', [])
+        //   resolve()
+        // }).catch(err => {
+        //   reject(err)
+        // })
         // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
-        // commit('setToken', '')
-        // commit('setAccess', [])
-        // resolve()
+        commit('setToken', '')
+        commit('setAccess', [])
+        resolve()
       })
     },
     // 获取用户相关信息
-    getUserInfo ({ state, commit }) {
+    getUserInfo ({ state, commit}) {
       return new Promise((resolve, reject) => {
         try {
-          getUserInfo(state.token).then(res => {
-            const data = res.data
+          getUserInfo(state.token).then(data => {
             commit('setAvatar', data.avatar)
             commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
+            commit('setUserId', data.uid)
             commit('setAccess', data.access)
             commit('setHasGetInfo', true)
+            resolve(data)
+          }).catch(err => {
+            reject(err)
+          })
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+
+    //获取所有人的实时定位
+    getAllNowGps({state}){
+      return new Promise((resolve, reject) => {
+        try {
+          getAllNowGps(state.token).then(data => {
             resolve(data)
           }).catch(err => {
             reject(err)

@@ -2,8 +2,8 @@ import axios from '@/libs/api.request'
 
 export const login = ({userName, password}) => {
   const data = {
-    userName,
-    password
+    username: userName,
+    password: password
   }
   return axios.request({
     url: 'login',
@@ -12,26 +12,33 @@ export const login = ({userName, password}) => {
   })
 }
 
-export const getUserInfo =(token)=>{
+export const getUserInfo = (token) => {
   return axios.request({
-    url:'get_info',
-    params:{
-      token
-    },
-    method:'get'
+    url: 'get_info',
+    headers: {'token': token},
+    method: 'post'
   })
 }
 
-export const logout=(token)=>{
+export const getAllNowGps = (token) => {
   return axios.request({
-    url:'logout',
-    method:'post'
+    url: 'allNowGps',
+    headers: {'token': token},
+    method: 'post'
   })
 }
 
-export const getUnreadCount=()=>{
+export const logout = (token) => {
   return axios.request({
-    url:'message/count',
-    method:'get'
+    url: 'logout',
+    headers: {'token': token},
+    method: 'post'
+  })
+}
+
+export const getUnreadCount = () => {
+  return axios.request({
+    url: 'message/count',
+    method: 'get'
   })
 }

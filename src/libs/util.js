@@ -54,6 +54,29 @@ export const getRouteTitleHandled = (route) => {
   return router
 }
 
+
+/**
+ * 判断打开的标签列表里是否已存在这个新添加的路由对象
+ */
+export const routeHasExist = (tagNavList, routeItem) => {
+  let len = tagNavList.length
+  let res = false
+  doCustomTimes(len, (index) => {
+    if (routeEqual(tagNavList[index], routeItem)) res = true
+  })
+  return res
+}
+/**
+ * @param {Number} times 回调函数需要执行的次数
+ * @param {Function} callback 回调函数
+ */
+export const doCustomTimes = (times, callback) => {
+  let i = -1
+  while (++i < times) {
+    callback(i)
+  }
+}
+
 export const getHomeRoute = (routers, homeName = 'home') => {
   let i = -1
   let len = routers.length
@@ -190,4 +213,13 @@ const showThisMenuEle = (item, access) => {
 
 export const hasChild = (item) => {
   return item.children && item.children.length !== 0
+}
+
+
+export const getComponents = (name, title) => {
+  if (!title) {
+    return () =>import('@/view/'+name+'/'+name+'.vue')
+  } else {
+    return () =>import('@/view/'+name+'/'+title+'.vue')
+  }
 }

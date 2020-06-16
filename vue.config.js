@@ -13,7 +13,7 @@ const resolve = dir => {
 // 需要将它改为'/my-app/'
 // iview-admin线上演示打包路径： https://file.iviewui.com/admin-dist/
 const BASE_URL = process.env.NODE_ENV === 'production'
-  ? '/'
+  ? ''
   : '/'
 
 module.exports = {
@@ -28,6 +28,13 @@ module.exports = {
   // tweak internal webpack configuration.
   // see https://github.com/vuejs/vue-cli/blob/dev/docs/webpack.md
   // 如果你不需要使用eslint，把lintOnSave设为false即可
+  configureWebpack: {
+    externals: {
+      'AMap': 'AMap',
+      'AMapUI': 'AMapUI'
+    },
+  },
+
   lintOnSave: false,
   chainWebpack: config => {
     config.resolve.alias
@@ -36,10 +43,11 @@ module.exports = {
   },
   // 打包时不生成.map文件
   productionSourceMap: false,
-  // 这里写你调用接口的基础路径，来解决跨域，如果设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
+  // 前端可以解决跨域 后端也可以
+  // 前端设置了代理，那你本地开发环境的axios的baseUrl要写为 '' ，即空字符串
   // devServer: {
-  //   proxy: 'localhost:3000'
-  // }
+  //   proxy: 'http://127.0.0.1:9090'
+  // },
   css: {
     loaderOptions: { // 向 CSS 相关的 loader 传递选项
       less: {

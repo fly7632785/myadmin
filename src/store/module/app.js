@@ -8,6 +8,8 @@ import {
   getTagNavListFromLocalstorage,
   getHomeRoute, routeEqual,
   getNextRoute,
+  getRouteTitleHandled,
+  routeHasExist,
 } from '@/libs/util'
 
 const {homeName} = config
@@ -72,6 +74,38 @@ export default {
       if (!route) return
       closePage(state, route)
     },
+    addTag (state, { route, type = 'unshift' }) {
+      let router = getRouteTitleHandled(route)
+      if (!routeHasExist(state.tagNavList, router)) {
+        if (type === 'push') state.tagNavList.push(router)
+        else {
+          if (router.name === homeName) state.tagNavList.unshift(router)
+          else state.tagNavList.splice(1, 0, router)
+        }
+        setTagNavListInLocalstorage([...state.tagNavList])
+      }
+    },
+    addError (state, error) {
+      state.errorList.push(error)
+    },
+    setHasReadErrorLoggerStatus (state, status = true) {
+      state.hasReadErrorPage = status
+    }
   },
-  actions: {}
+  actions: {
+    addErrorLog ({ commit, rootState }, info) {
+      if (!window.location.href.includes('error_logger_page')) commit('setHasReadErrorLoggerStatus', false)
+      const { user: { token, userId, userName } } = rootState
+      let data = {
+        ...info,
+        time: Date.parse(new Date()),
+        token,
+        userId,
+        userName
+      }
+      // saveErrorLogger(info).then(() => {
+        commit('addError', data)
+      // })
+    }
+  }
 }

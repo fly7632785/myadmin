@@ -7,7 +7,7 @@ import './index.less'
 import config from '@/config'
 
 Vue.config.productionTip = false
-if (process.env.NODE_ENV !== 'production') require('@/mock')
+// if (process.env.NODE_ENV !== 'production') require('@/mock')
 
 /**
  * @description 全局注册应用配置
