@@ -33,7 +33,7 @@
           this.getUserInfo().then(res => {
             this.$router.push({
               // name: this.$config.homeName
-              name: 'nowHps'
+              name: 'gpsHis'
             })
           })
         })

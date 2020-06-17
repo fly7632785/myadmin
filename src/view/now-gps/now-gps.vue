@@ -8,12 +8,16 @@
   import './now-gps.less'
   import AMap from 'AMap'
   import {mapActions} from "vuex";
+  import moment from "moment"
+  import personLogo from '@/assets/images/person.png'
 
   export default {
     name: "main",
     data() {
-      return{
+      return {
         map: {},
+        geocoder: {},
+        infoWindow: {}
       }
     },
     methods: {
@@ -23,32 +27,64 @@
       initMap() {
         const map = new AMap.Map('container', {
           resizeEnable: true,
-          room: 11
+          zoom: 11
         })
         this.map = map
         map.plugin(['AMap.ToolBar', 'AMap.MapType'], function () {
           map.addControl(new AMap.ToolBar())
           map.addControl(new AMap.MapType({showTraffic: false, showRoad: false}))
         })
+        AMap.service('AMap.Geocoder', this.getGeocoderCallBack)
+      },
+      getGeocoderCallBack() {//回调函数
+        this.geocoder = new AMap.Geocoder({
+          radius: 1000,
+          extensions: "all"
+        });
       },
       allNowGps() {
         this.getAllNowGps().then(res => {
-          this.addMarkers(res,this.map)
+          this.addMarkers(res)
           console.log("res", JSON.stringify(res))
         })
       },
-      addMarkers(data,map) {
-        const markerList = [];
+      addMarkers(data) {
+        this.infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -70)});
         data.forEach((item, index) => {
-          const marker = new AMap.Marker({
-            position: new AMap.LngLat(item.lng,item.lat),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-            title: data.name
+          var marker = new AMap.Marker({
+            position: [item.lng, item.lat],
+            icon: personLogo,
+            offset: new AMap.Pixel(-15, -66),
+            map: this.map
           });
-          console.log("marker", marker)
-          markerList.push(marker)
+          const time = moment(new Date(item.time * 1000)).format('YYYY-MM-DD HH:mm')
+          var info = [];
+          info.push('<img src=' + item.avatar + ' style=width:50px;height:50px>');
+          info.push("姓名：" + item.name);
+          info.push("时间：" + time);
+          marker.content = info.join("<br/>")  //使用默认信息窗体框样式，显示信息内容
+          marker.on('mouseover', this.markerHover);
+          // marker.emit('mouseover', {target: marker});
         })
-        console.log("map", map)
-        map.add(markerList)
+        this.map.setFitView();
+      },
+      getAddrByloc(e) {  //逆地理编码
+        var _this = this
+        this.geocoder.getAddress(e.target.getPosition(), function (status, result) {
+          if (status === 'complete' && result.info === 'OK') {
+            var address = result.regeocode.formattedAddress;
+            console.dir(address);
+            const content = e.target.content + '<br/>地址：' + address;
+            _this.infoWindow.setContent(content)
+            _this.infoWindow.open(_this.map, e.target.getPosition());
+          }
+        });
+      },
+      getAddrCallBack(status, result) {
+
+      },
+      markerHover(e) {
+        this.getAddrByloc(e)
       }
     },
     mounted() {

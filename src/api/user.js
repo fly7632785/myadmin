@@ -1,13 +1,17 @@
 import axios from '@/libs/api.request'
+import Qs from 'qs'
 
-export const login = ({userName, password}) => {
+export const login = ({username, password}) => {
   const data = {
-    username: userName,
-    password: password
+    username,
+    password
   }
   return axios.request({
     url: 'login',
-    data,
+    headers:{
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    data:Qs.stringify(data),
     method: 'post'
   })
 }
@@ -23,6 +27,27 @@ export const getUserInfo = (token) => {
 export const getAllNowGps = (token) => {
   return axios.request({
     url: 'allNowGps',
+    headers: {'token': token},
+    method: 'post'
+  })
+}
+export const getAllUsers = (token) => {
+  return axios.request({
+    url: 'getusers',
+    headers: {'token': token},
+    method: 'get'
+  })
+}
+export const getGpsHis = ({uid, from, to}, token) => {
+
+  const data = {
+    uid: uid,
+    from: from,
+    to: to
+  }
+  return axios.request({
+    url: 'gpsHis',
+    data: data,
     headers: {'token': token},
     method: 'post'
   })

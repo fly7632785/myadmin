@@ -3,15 +3,18 @@ import {
   getUserInfo,
   getUnreadCount,
   getAllNowGps,
+  getAllUsers,
+  getGpsHis,
   logout,
 } from '@/api/user'
-import {setToken,getToken} from "@/libs/util";
+import {setToken, getToken,getAvatar,setAvatar,getName,setName,getUsername,setUsername,getUid,setUid} from "@/libs/util";
 
 export default {
   state: {
-    userName: '',
-    userId: '',
-    avatarImgPath: '',
+    userName: getUsername(),
+    name: getName(),
+    userId: getUid(),
+    avatarImgPath: getAvatar(),
     token: getToken(),
     access: '',
     hasGetInfo: false,
@@ -22,56 +25,62 @@ export default {
     messageContentStore: {}
   },
   mutations: {
-    setAvatar (state, avatarPath) {
+    setAvatar(state, avatarPath) {
       state.avatarImgPath = avatarPath
+      setAvatar(avatarPath)
     },
-    setUserId (state, id) {
+    setUserId(state, id) {
       state.userId = id
+      setUid(id)
     },
-    setUserName (state, name) {
+    setName(state, name) {
+      state.name = name
+      setName(name)
+    },
+    setUserName(state, name) {
       state.userName = name
+      setUsername(name)
     },
-    setAccess (state, access) {
+    setAccess(state, access) {
       state.access = access
     },
-    setToken (state, token) {
+    setToken(state, token) {
       state.token = token
       setToken(token)
     },
-    setHasGetInfo (state, status) {
+    setHasGetInfo(state, status) {
       state.hasGetInfo = status
     },
-    setMessageCount (state, count) {
+    setMessageCount(state, count) {
       state.unreadCount = count
     },
-    setMessageUnreadList (state, list) {
+    setMessageUnreadList(state, list) {
       state.messageUnreadList = list
     },
-    setMessageReadedList (state, list) {
+    setMessageReadedList(state, list) {
       state.messageReadedList = list
     },
-    setMessageTrashList (state, list) {
+    setMessageTrashList(state, list) {
       state.messageTrashList = list
     },
-    updateMessageContentStore (state, { msg_id, content }) {
+    updateMessageContentStore(state, {msg_id, content}) {
       state.messageContentStore[msg_id] = content
     },
-    moveMsg (state, { from, to, msg_id }) {
+    moveMsg(state, {from, to, msg_id}) {
       const index = state[from].findIndex(_ => _.msg_id === msg_id)
       const msgItem = state[from].splice(index, 1)[0]
       msgItem.loading = false
       state[to].unshift(msgItem)
     }
   },
-  getters: {
-  },
   actions: {
     // 登录
     handleLogin({commit}, {userName, password}) {
-      userName = userName.trim()
+      const username = userName.trim()
+      console.log('username:',username)
       return new Promise((resolve, reject) => {
         login({
-          userName,
+          username,
           password
         }).then(res => {
           const data = res
@@ -79,13 +88,13 @@ export default {
           commit('setToken', data.token)
           resolve()
         }).catch(err => {
-          console.log("login error:"+JSON.stringify(err))
+          console.log("login error:" + JSON.stringify(err))
           reject(err)
         })
       })
     },
     // 退出登录
-    handleLogOut ({state,commit}) {
+    handleLogOut({state, commit}) {
       return new Promise((resolve, reject) => {
         // logout(state.token).then(() => {
         //   commit('setToken', '')
@@ -96,18 +105,23 @@ export default {
         // })
         // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
         commit('setToken', '')
+        commit('setAvatar', '')
+        commit('setName', '')
+        commit('setUserId', '')
+        commit('setUserName', '')
         commit('setAccess', [])
         resolve()
       })
     },
     // 获取用户相关信息
-    getUserInfo ({ state, commit}) {
+    getUserInfo({state, commit}) {
       return new Promise((resolve, reject) => {
         try {
           getUserInfo(state.token).then(data => {
             commit('setAvatar', data.avatar)
-            commit('setUserName', data.name)
+            commit('setUserName', data.username)
             commit('setUserId', data.uid)
+            commit('setName', data.name)
             commit('setAccess', data.access)
             commit('setHasGetInfo', true)
             resolve(data)
@@ -121,7 +135,7 @@ export default {
     },
 
     //获取所有人的实时定位
-    getAllNowGps({state}){
+    getAllNowGps({state}) {
       return new Promise((resolve, reject) => {
         try {
           getAllNowGps(state.token).then(data => {
@@ -134,10 +148,40 @@ export default {
         }
       })
     },
+
+    //获取所有人的实时定位
+    getAllUsers({state}) {
+      return new Promise((resolve, reject) => {
+        try {
+          getAllUsers(state.token).then(data => {
+            resolve(data)
+          }).catch(err => {
+            reject(err)
+          })
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+    //获取历史轨迹
+    getGpsHis({state}, {uid, from, to}) {
+      return new Promise((resolve, reject) => {
+        try {
+          getGpsHis({uid, from, to}, state.token).then(data => {
+            resolve(data)
+          }).catch(err => {
+            reject(err)
+          })
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+
     // 此方法用来获取未读消息条数，接口只返回数值，不返回消息列表
-    getUnreadMessageCount ({ state, commit }) {
+    getUnreadMessageCount({state, commit}) {
       getUnreadCount().then(res => {
-        const { data } = res
+        const {data} = res
         commit('setMessageCount', data)
       })
     },

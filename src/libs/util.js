@@ -5,8 +5,49 @@ const {title, cookieExpires} = config
 import Cookies from 'js-cookie'
 
 export const TOKEN_KEY = 'token'
+export const UID_KEY = 'uid'
+export const USERNAME_KEY = 'username'
+export const NAME_KEY = 'name'
+export const AVATAR_KEY = 'avatar'
 
 
+export const setAvatar = (avatar) => {
+  Cookies.set(AVATAR_KEY, avatar, {expires: cookieExpires || 1})
+}
+
+export const getAvatar = () => {
+  const avatar = Cookies.get(AVATAR_KEY)
+  if (avatar) return avatar
+  else return ''
+}
+export const setUsername = (username) => {
+  Cookies.set(USERNAME_KEY, username, {expires: cookieExpires || 1})
+}
+
+export const getUsername = () => {
+  const username = Cookies.get(USERNAME_KEY)
+  if (username) return username
+  else return ''
+}
+export const setUid = (uid) => {
+  Cookies.set(UID_KEY, uid, {expires: cookieExpires || 1})
+}
+
+export const getUid = () => {
+  const uid = Cookies.get(UID_KEY)
+  console.log('c uid:',uid)
+  if (uid) return uid
+  else return 0
+}
+export const setName = (name) => {
+  Cookies.set(NAME_KEY, name, {expires: cookieExpires || 1})
+}
+
+export const getName = () => {
+  const name = Cookies.get(NAME_KEY)
+  if (name) return name
+  else return ''
+}
 export const setToken = (token) => {
   Cookies.set(TOKEN_KEY, token, {expires: cookieExpires || 1})
 }

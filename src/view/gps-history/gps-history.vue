@@ -1,5 +1,41 @@
 <template>
-  <div id="container"></div>
+  <div id="root">
+    <Card id="menu">
+      <Row>
+        <i-col span="4">
+          <Dropdown @on-click="this.onUsersClick" class='dropdown'>
+            <i-button>
+              当前: {{this.currentUser}}
+              <Icon type="arrow-down-b"></Icon>
+            </i-button>
+            <template v-for="(item,index) in this.users">
+              <DropdownMenu slot="list">
+                <DropdownItem :name="index">
+                  <a type="text" class="drop-item-a">
+                    <img :src="item.avatar" style="width: 20px;height: 20px"/>
+                    <span style="padding-left: 5px">{{item.name}}</span>
+                  </a>
+                </DropdownItem>
+              </DropdownMenu>
+            </template>
+          </Dropdown>
+        </i-col>
+        <i-col span="6">
+          开始时间：
+          <Date-picker type="date" placeholder="选择日期" style="width: 140px"></Date-picker>
+        </i-col>
+        <i-col span="6">
+          结束时间：
+          <Date-picker type="date" placeholder="选择日期" style="width: 140px"></Date-picker>
+        </i-col>
+        <Button @click="this.startAnimation">开始轨迹
+        </Button>
+        <Button @click="this.stopAnimation">停止轨迹
+        </Button>
+      </Row>
+    </Card>
+    <div id="container"></div>
+  </div>
 </template>
 
 <script src="//webapi.amap.com/ui/1.1/main.js"></script>
@@ -7,23 +43,31 @@
 
   import './gps-history.less'
   import AMap from 'AMap'
-  import {mapActions} from "vuex";
+  import {mapActions, mapGetters} from "vuex";
+  import personLogo from '@/assets/images/person.png'
 
   export default {
     name: "main",
     data() {
-      return{
+      return {
         map: {},
+        marker: {},
+        users: [],
+        currentUser: {},
+        followPath: [],
       }
     },
     methods: {
       ...mapActions([
         'getAllNowGps',
+        'getAllUsers',
+        'getGpsHis',
       ]),
       initMap() {
+        console.log("initMap")
         const map = new AMap.Map('container', {
           resizeEnable: true,
-          room: 11
+          zoom: 13
         })
         this.map = map
         map.plugin(['AMap.ToolBar', 'AMap.MapType'], function () {
@@ -31,29 +75,97 @@
           map.addControl(new AMap.MapType({showTraffic: false, showRoad: false}))
         })
       },
-      allNowGps() {
-        this.getAllNowGps().then(res => {
-          this.addMarkers(res,this.map)
-          console.log("res", JSON.stringify(res))
+      allUsers() {
+        this.getAllUsers().then(res => {
+          console.log("users", JSON.stringify(res))
+          let users = [];
+          users = res;
+          this.users = users
+          if (res && users.length > 0) {
+            users.forEach(item => {
+              //默认获取自己的
+              //注意从cookie里面拿出来默认是string
+              console.log("this.$store.state.user.userId", this.$store.state.user.userId)
+              console.log("item.uid.toString()", item.uid.toString())
+              console.log("this.$store.state.user.userId", typeof this.$store.state.user.userId)
+              console.log("item.uid.toString()", typeof item.uid)
+              if (item.uid.toString() === this.$store.state.user.userId.toString()) {
+                console.log("===")
+                this.currentUser = item.name
+                this.selectGpsHis(item.uid)
+              }
+            })
+          }
         })
       },
-      addMarkers(data,map) {
-        const markerList = [];
+      showGpsHis(data) {
+        this.map.clearMap()
+        this.followPath = []
         data.forEach((item, index) => {
-          const marker = new AMap.Marker({
-            position: new AMap.LngLat(item.lng,item.lat),   // 经纬度对象，也可以是经纬度构成的一维数组[116.39, 39.9]
-            title: data.name
-          });
-          console.log("marker", marker)
-          markerList.push(marker)
+          const gps = [item.lng, item.lat]
+          this.followPath.push(gps)
         })
-        console.log("map", map)
-        map.add(markerList)
+        //重组数据为 [[lng,lat],[lng2,lat2]]
+
+        this.marker = new AMap.Marker({
+          map: this.map,
+          position: this.followPath[0],
+          icon: personLogo,
+          offset: new AMap.Pixel(-15, -66),
+        });
+
+        // 绘制轨迹
+        var polyline = new AMap.Polyline({
+          map: this.map,
+          path: this.followPath,
+          showDir: true,
+          strokeColor: "#28F",  //线颜色
+          // strokeOpacity: 1,     //线透明度
+          strokeWeight: 6,      //线宽
+          // strokeStyle: "solid"  //线样式
+        });
+
+        var passedPolyline = new AMap.Polyline({
+          map: this.map,
+          // path: this.followPath,
+          strokeColor: "#AF5",  //线颜色
+          // strokeOpacity: 1,     //线透明度
+          strokeWeight: 6,      //线宽
+          // strokeStyle: "solid"  //线样式
+        });
+
+        this.marker.on('moving', function (e) {
+          passedPolyline.setPath(e.passedPath);
+        });
+        this.map.setFitView()
+      },
+      startAnimation() {
+        this.marker.moveAlong(this.followPath, 5000);
+      },
+      stopAnimation() {
+        this.marker.stopMove()
+      },
+      resumeAnimation() {
+        this.marker.resumeMove()
+      },
+      pauseAnimation() {
+        this.marker.pauseMove()
+      },
+      selectGpsHis(uid, from, to) {
+        this.getGpsHis({uid, from, to}).then(data => {
+          console.log("getGpsHis", JSON.stringify(data))
+          this.showGpsHis(data)
+        })
+      },
+      onUsersClick(index) {
+        const item = this.users[index]
+        this.currentUser = item.name
+        this.selectGpsHis(item.uid)
       }
     },
     mounted() {
       this.initMap()
-      this.allNowGps()
+      this.allUsers()
     }
   }
 </script>

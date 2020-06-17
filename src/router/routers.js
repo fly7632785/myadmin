@@ -50,7 +50,7 @@ export default [
           title: "实时定位",
           icon: 'md-home'
         },
-        component: getComponents('gps-history')
+        component: getComponents('now-gps')
       },
       {
         path: '/gpsHis',
@@ -59,7 +59,7 @@ export default [
           title: "历史轨迹",
           icon: 'md-home'
         },
-        component: getComponents('now-gps')
+        component: getComponents('gps-history')
       }
     ]
   },
