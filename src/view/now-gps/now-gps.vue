@@ -1,5 +1,29 @@
 <template>
-  <div id="container"></div>
+  <div id="root">
+    <Card id="menu">
+      <Row>
+        <i-col span="4">
+          <Dropdown @on-click="this.onUsersClick" class='dropdown'>
+            <i-button>
+              当前: {{this.currentUser.name}}
+              <Icon type="arrow-down-b"></Icon>
+            </i-button>
+            <template v-for="(item,index) in this.data">
+              <DropdownMenu slot="list">
+                <DropdownItem :name="index">
+                  <a type="text" class="drop-item-a">
+                    <img :src="item.avatar" style="width: 20px;height: 20px"/>
+                    <span style="padding-left: 5px">{{item.name}}</span>
+                  </a>
+                </DropdownItem>
+              </DropdownMenu>
+            </template>
+          </Dropdown>
+        </i-col>
+      </Row>
+    </Card>
+    <div id="container"></div>
+  </div>
 </template>
 
 <script src="//webapi.amap.com/ui/1.1/main.js"></script>
@@ -17,12 +41,15 @@
       return {
         map: {},
         geocoder: {},
-        infoWindow: {}
+        infoWindow: {},
+        data:[],
+        currentUser:{},
       }
     },
     methods: {
       ...mapActions([
         'getAllNowGps',
+        'getAllUsers',
       ]),
       initMap() {
         const map = new AMap.Map('container', {
@@ -44,7 +71,9 @@
       },
       allNowGps() {
         this.getAllNowGps().then(res => {
+          this.data = res;
           this.addMarkers(res)
+          this.addDropDown(res)
           console.log("res", JSON.stringify(res))
         })
       },
@@ -68,7 +97,7 @@
         })
         this.map.setFitView();
       },
-      getAddrByloc(e) {  //逆地理编码
+      markerHover(e) {
         var _this = this
         this.geocoder.getAddress(e.target.getPosition(), function (status, result) {
           if (status === 'complete' && result.info === 'OK') {
@@ -80,12 +109,25 @@
           }
         });
       },
-      getAddrCallBack(status, result) {
-
+      addDropDown(res) {
+        if (res && res.length > 0) {
+          res.forEach(item => {
+            //默认获取自己的
+            //注意从cookie里面拿出来默认是string
+            if (item.uid.toString() === this.$store.state.user.userId.toString()) {
+              this.currentUser = item
+              //设为中心 显示信息
+              this.map.setCenter([item.lng,item.lat])
+            }
+          })
+        }
       },
-      markerHover(e) {
-        this.getAddrByloc(e)
-      }
+      onUsersClick(index) {
+        const item = this.data[index]
+        this.currentUser = item
+        //设为中心
+        this.map.setCenter([item.lng,item.lat])
+      },
     },
     mounted() {
       this.initMap()

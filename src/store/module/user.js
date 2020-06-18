@@ -167,6 +167,8 @@ export default {
     getGpsHis({state}, {uid, from, to}) {
       return new Promise((resolve, reject) => {
         try {
+          console.log('from：',from)
+          console.log('to：',to)
           getGpsHis({uid, from, to}, state.token).then(data => {
             resolve(data)
           }).catch(err => {

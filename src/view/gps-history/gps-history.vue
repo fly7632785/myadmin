@@ -5,7 +5,7 @@
         <i-col span="4">
           <Dropdown @on-click="this.onUsersClick" class='dropdown'>
             <i-button>
-              当前: {{this.currentUser}}
+              当前: {{this.currentUser.name}}
               <Icon type="arrow-down-b"></Icon>
             </i-button>
             <template v-for="(item,index) in this.users">
@@ -21,12 +21,9 @@
           </Dropdown>
         </i-col>
         <i-col span="6">
-          开始时间：
-          <Date-picker type="date" placeholder="选择日期" style="width: 140px"></Date-picker>
-        </i-col>
-        <i-col span="6">
-          结束时间：
-          <Date-picker type="date" placeholder="选择日期" style="width: 140px"></Date-picker>
+          日期范围：
+          <Date-picker type="daterange" @on-change="this.pickDate" @on-ok="this.pickDateOk" confirm
+                       placement="bottom-end" placeholder="选择日期" style="width: 140px"></Date-picker>
         </i-col>
         <Button @click="this.startAnimation">开始轨迹
         </Button>
@@ -54,6 +51,12 @@
         marker: {},
         users: [],
         currentUser: {},
+        startTime: {
+          type: Number,
+        },
+        endTime: {
+          type: Number,
+        },
         followPath: [],
       }
     },
@@ -91,7 +94,7 @@
               console.log("item.uid.toString()", typeof item.uid)
               if (item.uid.toString() === this.$store.state.user.userId.toString()) {
                 console.log("===")
-                this.currentUser = item.name
+                this.currentUser = item
                 this.selectGpsHis(item.uid)
               }
             })
@@ -159,8 +162,20 @@
       },
       onUsersClick(index) {
         const item = this.users[index]
-        this.currentUser = item.name
+        this.currentUser = item
         this.selectGpsHis(item.uid)
+      },
+      pickDate(dates) {
+        console.log("startTime", dates[0])
+        console.log("endTime", dates[1])
+        this.startTime = Number(new Date(dates[0])) / 1000;
+        this.endTime = Number(new Date(dates[1])) / 1000;
+      },
+      pickDateOk() {
+        console.log("pickDateOk")
+        console.log('startTime:',this.startTime)
+        console.log('endTime:',this.endTime)
+        this.selectGpsHis(this.currentUser.uid, this.startTime, this.endTime)
       }
     },
     mounted() {
