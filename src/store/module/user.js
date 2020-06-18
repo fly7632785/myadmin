@@ -5,16 +5,28 @@ import {
   getAllNowGps,
   getAllUsers,
   getGpsHis,
+  updateUserInfo,
   logout,
 } from '@/api/user'
-import {setToken, getToken,getAvatar,setAvatar,getName,setName,getUsername,setUsername,getUid,setUid} from "@/libs/util";
+import {
+  setToken,
+  getToken,
+  getAvatar,
+  setAvatar,
+  getName,
+  setName,
+  getUsername,
+  setUsername,
+  getUid,
+  setUid
+} from "@/libs/util";
 
 export default {
   state: {
     userName: getUsername(),
     name: getName(),
     userId: getUid(),
-    avatarImgPath: getAvatar(),
+    avatar: getAvatar(),
     token: getToken(),
     access: '',
     hasGetInfo: false,
@@ -26,7 +38,7 @@ export default {
   },
   mutations: {
     setAvatar(state, avatarPath) {
-      state.avatarImgPath = avatarPath
+      state.avatar = avatarPath
       setAvatar(avatarPath)
     },
     setUserId(state, id) {
@@ -77,7 +89,7 @@ export default {
     // 登录
     handleLogin({commit}, {userName, password}) {
       const username = userName.trim()
-      console.log('username:',username)
+      console.log('username:', username)
       return new Promise((resolve, reject) => {
         login({
           username,
@@ -133,7 +145,23 @@ export default {
         }
       })
     },
-
+    //修改个人信息
+    handleUpdateUserInfo({state}, {name, password}) {
+      return new Promise((resolve, reject) => {
+        try {
+          console.log('updateUserInfo name：', name)
+          console.log('updateUserInfo password：', password)
+          updateUserInfo({name, password}, state.token)
+          .then(data => {
+            resolve(data)
+          }).catch(e => {
+            reject(e)
+          })
+        } catch (e) {
+          reject(e)
+        }
+      })
+    },
     //获取所有人的实时定位
     getAllNowGps({state}) {
       return new Promise((resolve, reject) => {
@@ -167,8 +195,8 @@ export default {
     getGpsHis({state}, {uid, from, to}) {
       return new Promise((resolve, reject) => {
         try {
-          console.log('from：',from)
-          console.log('to：',to)
+          console.log('from：', from)
+          console.log('to：', to)
           getGpsHis({uid, from, to}, state.token).then(data => {
             resolve(data)
           }).catch(err => {

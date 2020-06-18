@@ -31,7 +31,7 @@
         </Button>
       </Row>
     </Card>
-    <div id="container"></div>
+    <div id="map" style="width: 100%;height: 100%"></div>
   </div>
 </template>
 
@@ -44,7 +44,7 @@
   import personLogo from '@/assets/images/person.png'
 
   export default {
-    name: "main",
+    name: "gps-history",
     data() {
       return {
         map: {},
@@ -68,7 +68,7 @@
       ]),
       initMap() {
         console.log("initMap")
-        const map = new AMap.Map('container', {
+        const map = new AMap.Map('map', {
           resizeEnable: true,
           zoom: 13
         })

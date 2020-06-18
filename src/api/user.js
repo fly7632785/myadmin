@@ -16,6 +16,19 @@ export const login = ({username, password}) => {
   })
 }
 
+export const updateUserInfo = ({name, password},token) => {
+  const data = {
+    name:name,
+    password:password
+  }
+  return axios.request({
+    url: 'update_user',
+    headers: {'token': token},
+    data:data,
+    method: 'post'
+  })
+}
+
 export const getUserInfo = (token) => {
   return axios.request({
     url: 'get_info',

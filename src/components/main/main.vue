@@ -161,7 +161,7 @@
         return this.$store.state.user.unreadCount
       },
       userAvatar() {
-        return this.$store.state.user.avatarImgPath
+        return this.$store.state.user.avatar
       },
       userName() {
         return this.$store.state.user.userName

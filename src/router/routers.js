@@ -63,6 +63,26 @@ export default [
       }
     ]
   },
+  {
+    path: '/mine',
+    name: 'mine',
+    meta: {
+      title: '个人中心',
+      icon: 'md-home'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/info',
+        name: 'info',
+        meta: {
+          title: "信息资料",
+          icon: 'md-home'
+        },
+        component: getComponents('mine')
+      }
+    ]
+  }
   // {
   //   path: '/error_logger',
   //   name: 'error_logger',
