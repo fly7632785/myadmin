@@ -63,7 +63,7 @@
     methods: {
       ...mapActions([
         'getAllNowGps',
-        'getAllUsers',
+        'handleGetAllUsers',
         'getGpsHis',
       ]),
       initMap() {
@@ -79,7 +79,7 @@
         })
       },
       allUsers() {
-        this.getAllUsers().then(res => {
+        this.handleGetAllUsers().then(res => {
           console.log("users", JSON.stringify(res))
           let users = [];
           users = res;

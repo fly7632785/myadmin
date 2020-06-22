@@ -202,7 +202,7 @@
         }, complete => {
           console.log('complete')
         }, err => {
-          console.log('err')
+          console.log('err',err)
           //如果出错回退菜单按钮点击
           this.$refs.menu.currentActiveName = this.$route.name
         })

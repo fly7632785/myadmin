@@ -6,6 +6,7 @@ import {
   getAllUsers,
   getGpsHis,
   updateUserInfo,
+  deleteUser,
   logout,
 } from '@/api/user'
 import {
@@ -13,6 +14,8 @@ import {
   getToken,
   getAvatar,
   setAvatar,
+  getMobile,
+  setMobile,
   getName,
   setName,
   getUsername,
@@ -28,6 +31,7 @@ export default {
     userId: getUid(),
     avatar: getAvatar(),
     token: getToken(),
+    mobile: getMobile(),
     access: '',
     hasGetInfo: false,
     unreadCount: 0,
@@ -55,6 +59,10 @@ export default {
     },
     setAccess(state, access) {
       state.access = access
+    },
+    setMobile(state, mobile) {
+      state.mobile = mobile
+      setMobile(mobile)
     },
     setToken(state, token) {
       state.token = token
@@ -134,6 +142,7 @@ export default {
             commit('setUserName', data.username)
             commit('setUserId', data.uid)
             commit('setName', data.name)
+            commit('setMobile', data.mobile)
             commit('setAccess', data.access)
             commit('setHasGetInfo', true)
             resolve(data)
@@ -146,12 +155,12 @@ export default {
       })
     },
     //修改个人信息
-    handleUpdateUserInfo({state}, {name, password}) {
+    handleUpdateUserInfo({state}, {uid,name, password,mobile,avatar}) {
       return new Promise((resolve, reject) => {
         try {
           console.log('updateUserInfo name：', name)
           console.log('updateUserInfo password：', password)
-          updateUserInfo({name, password}, state.token)
+          updateUserInfo({uid,name, password,mobile,avatar}, state.token)
           .then(data => {
             resolve(data)
           }).catch(e => {
@@ -178,10 +187,23 @@ export default {
     },
 
     //获取所有人的实时定位
-    getAllUsers({state}) {
+    handleGetAllUsers({state}) {
       return new Promise((resolve, reject) => {
         try {
           getAllUsers(state.token).then(data => {
+            resolve(data)
+          }).catch(err => {
+            reject(err)
+          })
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+    handleDeleteUser({state},{uid}) {
+      return new Promise((resolve, reject) => {
+        try {
+          deleteUser({uid},state.token).then(data => {
             resolve(data)
           }).catch(err => {
             reject(err)

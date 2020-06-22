@@ -39,7 +39,7 @@ export default [
     name: 'gps',
     meta: {
       title: '地图相关',
-      icon: 'md-home'
+      icon: 'md-ionic'
     },
     component: Main,
     children: [
@@ -48,7 +48,7 @@ export default [
         name: 'nowHps',
         meta: {
           title: "实时定位",
-          icon: 'md-home'
+          icon: 'md-pin'
         },
         component: getComponents('now-gps')
       },
@@ -57,9 +57,29 @@ export default [
         name: 'gpsHis',
         meta: {
           title: "历史轨迹",
-          icon: 'md-home'
+          icon: 'md-trending-up'
         },
         component: getComponents('gps-history')
+      }
+    ]
+  },
+  {
+    path: '/mine',
+    name: 'mine',
+    meta: {
+      title: '个人中心',
+      icon: 'md-person'
+    },
+    component: Main,
+    children: [
+      {
+        path: '/info',
+        name: 'info',
+        meta: {
+          title: "信息资料",
+          icon: 'md-person'
+        },
+        component: getComponents('mine')
       }
     ]
   },
@@ -73,16 +93,16 @@ export default [
     component: Main,
     children: [
       {
-        path: '/info',
-        name: 'info',
+        path: '/user-manage',
+        name: 'user-manage',
         meta: {
-          title: "信息资料",
-          icon: 'md-home'
+          title: "用户管理",
+          icon: 'md-people'
         },
-        component: getComponents('mine')
+        component: getComponents('user-manage')
       }
     ]
-  }
+  },
   // {
   //   path: '/error_logger',
   //   name: 'error_logger',
@@ -142,16 +162,6 @@ export default [
   //       component: getComponents('test', 'test3')
   //     }
   //   ]
-  // },
-  // {
-  //   path: '/test3',
-  //   name: 'test3',
-  //   meta: {
-  //     title: '测试3',
-  //     icon: 'md-watch'
-  //   }
-  //   ,
-  //   component: Main
   // },
   // {
   //   path: '/query',

@@ -49,7 +49,7 @@
     methods: {
       ...mapActions([
         'getAllNowGps',
-        'getAllUsers',
+        'handleGetAllUsers',
       ]),
       initMap() {
         const map = new AMap.Map('map', {

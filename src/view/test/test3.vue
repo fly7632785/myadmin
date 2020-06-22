@@ -1,48 +1,23 @@
 <template>
-  <Card>
-    <div>
-      <div class="parent">
-        <div class="item-1"></div>
-        <div class="item-2"></div>
-        <div class="item-3"></div>
-      </div>
-      <div v-for="count in 100">
-        {{count+"sdfasf"}}}
-      </div>
-    </div>
-  </Card>
+  <EditUser style="width: 100%;height: 100%" :user="user" :header="header" :is-show="true"
+            :upload-url="uploadUrl"></EditUser>
 </template>
 
 <script>
+  import EditUser from '../user-manage/edit-user/edit-user'
+
   export default {
     name: "test3",
+    components: {
+      // EditUser
+    },
+    data() {
+      return {
+        isShow: true,
+        user: {},
+        header: {},
+        uploadUrl: {}
+      }
+    }
   }
 </script>
-
-<style scoped>
-  .parent {
-    display: flex;
-    width: 600px;
-  }
-
-  .parent > div {
-    height: 100px;
-  }
-
-  .item-1 {
-    width: 140px;
-    flex: 2 1 0;
-    background: blue;
-  }
-
-  .item-2 {
-    width: 100px;
-    flex: 2 1 auto;
-    background: darkblue;
-  }
-
-  .item-3 {
-    flex: 1 1 200px;
-    background: lightblue;
-  }
-</style>

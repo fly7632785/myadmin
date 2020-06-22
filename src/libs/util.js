@@ -9,6 +9,7 @@ export const UID_KEY = 'uid'
 export const USERNAME_KEY = 'username'
 export const NAME_KEY = 'name'
 export const AVATAR_KEY = 'avatar'
+export const MOBILE_KEY = 'mobile'
 
 
 export const setAvatar = (avatar) => {
@@ -18,6 +19,17 @@ export const setAvatar = (avatar) => {
 export const getAvatar = () => {
   const avatar = Cookies.get(AVATAR_KEY)
   if (avatar) return avatar
+  else return ''
+}
+export const setMobile = (mobile) => {
+  console.log('setMobile:',mobile)
+  Cookies.set(MOBILE_KEY, mobile, {expires: cookieExpires || 1})
+}
+
+export const getMobile = () => {
+  const mobile = Cookies.get(MOBILE_KEY)
+  console.log('getMobile:',mobile)
+  if (mobile) return mobile
   else return ''
 }
 export const setUsername = (username) => {

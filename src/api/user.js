@@ -16,10 +16,28 @@ export const login = ({username, password}) => {
   })
 }
 
-export const updateUserInfo = ({name, password},token) => {
+export const deleteUser = ({uid}, token) => {
   const data = {
+    uid
+  }
+  return axios.request({
+    url: 'delete_user',
+    headers:{
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'token': token
+    },
+    data:Qs.stringify(data),
+    method: 'post'
+  })
+}
+
+export const updateUserInfo = ({uid,name, password,mobile,avatar},token) => {
+  const data = {
+    uid:uid,
     name:name,
-    password:password
+    password:password,
+    mobile:mobile,
+    avatar:avatar,
   }
   return axios.request({
     url: 'update_user',
