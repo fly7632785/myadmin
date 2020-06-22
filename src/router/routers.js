@@ -80,18 +80,7 @@ export default [
           icon: 'md-person'
         },
         component: getComponents('mine')
-      }
-    ]
-  },
-  {
-    path: '/mine',
-    name: 'mine',
-    meta: {
-      title: '个人中心',
-      icon: 'md-home'
-    },
-    component: Main,
-    children: [
+      },
       {
         path: '/user-manage',
         name: 'user-manage',

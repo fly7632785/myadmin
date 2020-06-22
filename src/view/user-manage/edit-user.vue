@@ -1,24 +1,24 @@
 <template>
-  <Modal :value="isShow" title="修改用户信息" @on-visible-change="handleVisible">
+  <Modal :value="isShow" :title="title" @on-visible-change="handleVisible">
+    <Upload
+      ref="upload"
+      :show-upload-list="false"
+      :on-success="handleUploadSuccess"
+      :format="['jpg','jpeg','png']"
+      :max-size="2048"
+      :on-format-error="handleUploadFormatError"
+      :on-exceeded-size="handleUploadMaxSize"
+      :headers="header"
+      type="drag"
+      :action="uploadUrl"
+      style="display: inline-block;width:50px;height:50px;margin-bottom: 50px">
+      <Avatar :src='user.avatar' style="width:50px;height: 50px"/>
+    </Upload>
     <Form ref="user" :model="user" :rules="ruleValidate">
-      <Upload
-        ref="upload"
-        :show-upload-list="false"
-        :on-success="handleUploadSuccess"
-        :format="['jpg','jpeg','png']"
-        :max-size="2048"
-        :on-format-error="handleUploadFormatError"
-        :on-exceeded-size="handleUploadMaxSize"
-        :headers="header"
-        type="drag"
-        :action="uploadUrl"
-        style="display: inline-block;width:50px;height:50px;margin-bottom: 50px">
-        <Avatar :src='user.avatar' style="width:50px;height: 50px"/>
-      </Upload>
       <FormItem label="用户名" prop="username">
         <Input v-model="user.username"/>
       </FormItem>
-      <FormItem label="密码">
+      <FormItem label="密码" prop="password">
         <Input v-model="user.password"/>
       </FormItem>
       <FormItem label="姓名">
@@ -41,7 +41,7 @@
       //姓名、头像、手机、用户名、密码、
       user: {
         uid: '',
-        avatar: '',
+        avatar:'',
         name: '',
         username: '',
         password: '',
@@ -52,13 +52,35 @@
       //上传所需的token
       header: {},
       //上传地址
-      uploadUrl: {}
+      uploadUrl: {},
+      isEdit: {
+        type: Boolean
+      },
+    },
+    computed: {
+      title() {
+        return this.isEdit === true ? "修改用户信息" : "新建用户信息"
+      },
+      ruleValidate() {
+        console.log('ruleValidate', this.isEdit)
+        const rule = this.isEdit === true ? this.editRuleValidate : this.createRuleValidate
+        console.log('ruleValidate', rule)
+        return rule
+      }
     },
     data() {
       return {
-        ruleValidate: {
+        editRuleValidate: {
           username: [
             {required: true, message: 'The name cannot be empty', trigger: 'blur'}
+          ],
+        },
+        createRuleValidate: {
+          username: [
+            {required: true, message: 'The name cannot be empty', trigger: 'blur'}
+          ],
+          password: [
+            {required: true, message: 'The password cannot be empty', trigger: 'blur'}
           ],
         }
       }
@@ -85,7 +107,7 @@
         this.$refs[name].validate((valid) => {
           if (valid) {
             //发送ok事件
-            this.$emit('ok', {user: this.user})
+            this.$emit('ok', {user: this.user, isEdit: this.isEdit})
             //关闭弹框
             this.$emit('visible', false)
           }
@@ -96,9 +118,11 @@
         this.$emit('visible', false)
       },
       handleVisible(visible) {
+        //每次都清空验证信息 因为编辑和创建不一样
+        this.$refs['user'].resetFields();
         //发送事件给父组件 修改自己的visible状态（注意这里 不能用v-model数据绑定 子组件不能修改父组件传来的prop的对象状态）
         this.$emit('visible', visible)
       }
-    }
+    },
   };
 </script>

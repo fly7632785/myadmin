@@ -31,9 +31,24 @@ export const deleteUser = ({uid}, token) => {
   })
 }
 
-export const updateUserInfo = ({uid,name, password,mobile,avatar},token) => {
+export const createUserInfo = ({username,name, password,mobile,avatar}) => {
   const data = {
-    uid:uid,
+    username:username,
+    name:name,
+    password:password,
+    mobile:mobile,
+    avatar:avatar,
+  }
+  return axios.request({
+    url: 'create_user',
+    data:data,
+    method: 'post'
+  })
+}
+
+export const updateUserInfo = ({username,name, password,mobile,avatar},token) => {
+  const data = {
+    username:username,
     name:name,
     password:password,
     mobile:mobile,

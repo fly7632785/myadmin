@@ -4,7 +4,7 @@
 </template>
 
 <script>
-  import EditUser from '../user-manage/edit-user/edit-user'
+  import EditUser from '../user-manage/edit-user'
 
   export default {
     name: "test3",

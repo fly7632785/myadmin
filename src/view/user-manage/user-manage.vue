@@ -1,13 +1,15 @@
 <template>
   <div class="user-manage">
-    <Table style="margin:20px" border :columns="columns" :data="tableData"/>
+    <Button type="primary" style="margin-left: 20px" @click="createUser">创建新用户</Button>
     <EditUser :user="newUser"
+              :isEdit="isEdit"
               @visible="this.handleEditVisible"
               :header="{'token': this.$store.state.user.token}"
               :is-show="isShowEdit"
               :upload-url="this.$config.baseUrl.dev + 'upload'"
               @ok="handleEditOk"
     ></EditUser>
+    <Table style="margin:20px" border :columns="columns" :data="tableData"/>
   </div>
 </template>
 
@@ -16,7 +18,8 @@
   import {mapActions, mapGetters} from 'vuex'
   import {Message} from "iview";
   import moment from "moment";
-  import EditUser from './edit-user/edit-user'
+  import EditUser from './edit-user'
+  import logo from "@/assets/logo.png";
 
   export default {
     name: 'user-manage',
@@ -115,7 +118,8 @@
         tableData: [],
         newUser: {},
         isShowEdit: false,
-        editIndex: 0
+        editIndex: 0,
+        isEdit: true,//true 编辑  false 新建
       }
     },
     components: {
@@ -127,6 +131,7 @@
         'handleUpdateUserInfo',
         'handleGetAllUsers',
         'handleDeleteUser',
+        'handleCreateUser',
       ]),
       allUsers() {
         this.handleGetAllUsers().then(data => {
@@ -138,13 +143,13 @@
         console.log('this.tableData[index].uid.toString()', this.userdata[index].uid.toString())
         console.log('this.$store.state.user.userId.toString()', this.$store.state.user.userId.toString())
         this.$Modal.confirm({
-          title:'确定删除吗',
-          onOk:()=>{
+          title: '确定删除吗',
+          onOk: () => {
             if (this.userdata[index].uid.toString() === this.$store.state.user.userId.toString()) {
               Message.error('不能删除自己')
             } else {
               // this.handleDeleteUser().then(data => {
-                Message.success('删除成功')
+              Message.success('删除成功')
               // })
               this.userdata.splice(index, 1);
               this.handleTableData()
@@ -157,10 +162,12 @@
         this.newUser = Object.assign({}, this.userdata[index])//克隆一个
         //编辑的index
         this.editIndex = index
+        this.isEdit = true
         //显示编辑弹框
         this.isShowEdit = true
       },
       formatDate(time) {
+        console.log('formatDate', time)
         if (time === null) {
           return '从未登陆'
         }
@@ -175,25 +182,53 @@
       },
       handleEditVisible(visible) {
         console.log('handleEditVisible', visible)
-        this.isShowEdit = visible
+        if(visible === false){
+          this.isShowEdit = false
+        }
       },
-      handleEditOk(user) {
-        console.log('handleEditOk', user)
-        this.userdata[this.editIndex] = this.newUser
-        console.log(this.newUser)
-        this.handleUpdateUserInfo({
-          uid: this.newUser.uid,
-          name: this.newUser.name,
-          password: this.newUser.password,
-          mobile: this.newUser.mobile,
-          avatar: this.newUser.avatar
-        })
-        .then(data => {
-          Message.success('修改成功')
-          //本地刷新
-          this.handleTableData()
-        })
+      handleEditOk(data) {
+        console.log('handleEditOk', data)
+        let {user, isEdit} = data
+
+        if (isEdit) {
+          this.userdata[this.editIndex] = this.newUser
+          console.log(this.newUser)
+          this.handleUpdateUserInfo({
+            username: this.newUser.username,
+            name: this.newUser.name,
+            password: this.newUser.password,
+            mobile: this.newUser.mobile,
+            avatar: this.newUser.avatar
+          })
+          .then(data => {
+            Message.success('修改成功')
+            //本地刷新
+            this.handleTableData()
+          })
+        } else {
+          //新建
+          console.log('handleEditOk', user.username)
+          this.handleCreateUser({
+            username: user.username,
+            name: user.name,
+            password: user.password,
+            mobile: user.mobile,
+            avatar: user.avatar
+          })
+          .then(data => {
+            Message.success('创建成功')
+            this.allUsers()
+          })
+        }
       },
+      createUser() {
+        this.newUser = {
+          avatar:logo //如果默认的没有图片，上传返回url重新设置不会马上刷新  有默认就可以
+        }
+        //显示编辑弹框
+        this.isEdit = false
+        this.isShowEdit = true
+      }
     },
     mounted() {
       this.allUsers()
