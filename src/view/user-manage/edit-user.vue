@@ -24,7 +24,7 @@
       <FormItem label="姓名">
         <Input v-model="user.name"/>
       </FormItem>
-      <FormItem label="手机">
+      <FormItem label="手机" prop="mobile">
         <Input v-model="user.mobile"/>
       </FormItem>
     </Form>
@@ -68,12 +68,21 @@
         return rule
       }
     },
+    watch:{
+      isShow(val){
+        console.log('isShow',val)
+      }
+    },
     data() {
       return {
         editRuleValidate: {
           username: [
             {required: true, message: 'The name cannot be empty', trigger: 'blur'}
           ],
+          mobile:[
+            { required: false, message: "请输入手机号码", trigger: "blur" },
+            { pattern: /^1[3456789]\d{9}$/, message: "手机号码格式不正确", trigger: "blur"}
+          ]
         },
         createRuleValidate: {
           username: [
@@ -82,6 +91,10 @@
           password: [
             {required: true, message: 'The password cannot be empty', trigger: 'blur'}
           ],
+          mobile:[
+            { required: false, message: "请输入手机号码", trigger: "blur" },
+            { pattern: /^1[3456789]\d{9}$/, message: "手机号码格式不正确", trigger: "blur"}
+          ]
         }
       }
     },
@@ -105,6 +118,7 @@
       //处理确定
       handleConfirm(name) {
         this.$refs[name].validate((valid) => {
+          console.log('handleConfirm validate',valid)
           if (valid) {
             //发送ok事件
             this.$emit('ok', {user: this.user, isEdit: this.isEdit})

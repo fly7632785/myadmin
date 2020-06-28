@@ -75,7 +75,7 @@
         avatar: this.$store.state.user.avatar,
         name: this.$store.state.user.name,
         header: {'token': this.$store.state.user.token},
-        uploadUrl: this.$config.baseUrl.dev + "upload"
+        uploadUrl: this.$config.baseUrl + "upload"
       }
     },
     computed: {
@@ -129,7 +129,7 @@
       },
     },
     mounted() {
-      console.log("upload url:",this.$config.baseUrl.dev + "upload")
+      console.log("upload url:",this.$config.baseUrl + "upload")
       console.log("token:", this.$store.state.user.token)
     }
   };

@@ -172,12 +172,12 @@ export default {
       })
     },
     //修改个人信息
-    handleUpdateUserInfo({state}, {username,name, password,mobile,avatar}) {
+    handleUpdateUserInfo({state}, {uid,username,name, password,mobile,avatar}) {
       return new Promise((resolve, reject) => {
         try {
           console.log('updateUserInfo name：', name)
           console.log('updateUserInfo password：', password)
-          updateUserInfo({username,name, password,mobile,avatar}, state.token)
+          updateUserInfo({uid,username,name, password,mobile,avatar}, state.token)
           .then(data => {
             resolve(data)
           }).catch(e => {

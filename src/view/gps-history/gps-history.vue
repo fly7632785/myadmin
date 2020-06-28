@@ -1,37 +1,39 @@
 <template>
   <div id="root">
-    <Card id="menu">
-      <Row>
-        <i-col span="4">
-          <Dropdown @on-click="this.onUsersClick" class='dropdown'>
-            <i-button>
-              当前: {{this.currentUser.name}}
-              <Icon type="arrow-down-b"></Icon>
-            </i-button>
-            <template v-for="(item,index) in this.users">
-              <DropdownMenu slot="list">
-                <DropdownItem :name="index">
-                  <a type="text" class="drop-item-a">
-                    <img :src="item.avatar" style="width: 20px;height: 20px"/>
-                    <span style="padding-left: 5px">{{item.name}}</span>
-                  </a>
-                </DropdownItem>
-              </DropdownMenu>
-            </template>
-          </Dropdown>
-        </i-col>
-        <i-col span="6">
-          日期范围：
-          <Date-picker type="daterange" @on-change="this.pickDate" @on-ok="this.pickDateOk" confirm
-                       placement="bottom-end" placeholder="选择日期" style="width: 140px"></Date-picker>
-        </i-col>
-        <Button @click="this.startAnimation">开始轨迹
-        </Button>
-        <Button @click="this.stopAnimation">停止轨迹
-        </Button>
-      </Row>
-    </Card>
-    <div id="map" style="width: 100%;height: 100%"></div>
+    <div id="menu">
+      <Card>
+        <Row>
+          <i-col span="4">
+            <Dropdown @on-click="this.onUsersClick" class='dropdown'>
+              <i-button>
+                当前: {{this.currentUser.name}}
+                <Icon type="arrow-down-b"></Icon>
+              </i-button>
+              <template v-for="(item,index) in this.users">
+                <DropdownMenu slot="list">
+                  <DropdownItem :name="index">
+                    <a type="text" class="drop-item-a">
+                      <img :src="item.avatar" style="width: 20px;height: 20px"/>
+                      <span style="padding-left: 5px">{{item.name}}</span>
+                    </a>
+                  </DropdownItem>
+                </DropdownMenu>
+              </template>
+            </Dropdown>
+          </i-col>
+          <i-col span="6">
+            日期范围：
+            <Date-picker type="daterange" @on-change="this.pickDate" @on-ok="this.pickDateOk" confirm
+                         placement="bottom-end" placeholder="选择日期" style="width: 140px"></Date-picker>
+          </i-col>
+          <Button @click="this.startAnimation">开始轨迹
+          </Button>
+          <Button @click="this.stopAnimation">停止轨迹
+          </Button>
+        </Row>
+      </Card>
+    </div>
+    <div id="map"></div>
   </div>
 </template>
 
@@ -42,6 +44,7 @@
   import AMap from 'AMap'
   import {mapActions, mapGetters} from "vuex";
   import personLogo from '@/assets/images/person.png'
+  import {Message} from 'iview'
 
   export default {
     name: "gps-history",
@@ -104,11 +107,17 @@
       showGpsHis(data) {
         this.map.clearMap()
         this.followPath = []
+
         data.forEach((item, index) => {
           const gps = [item.lng, item.lat]
           this.followPath.push(gps)
         })
         //重组数据为 [[lng,lat],[lng2,lat2]]
+
+        if (this.followPath.length === 0) {
+          Message.warning('无历史数据')
+          return
+        }
 
         this.marker = new AMap.Marker({
           map: this.map,
@@ -173,8 +182,8 @@
       },
       pickDateOk() {
         console.log("pickDateOk")
-        console.log('startTime:',this.startTime)
-        console.log('endTime:',this.endTime)
+        console.log('startTime:', this.startTime)
+        console.log('endTime:', this.endTime)
         this.selectGpsHis(this.currentUser.uid, this.startTime, this.endTime)
       }
     },

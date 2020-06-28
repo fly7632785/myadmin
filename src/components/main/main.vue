@@ -81,7 +81,7 @@
               size="24"></Icon>
         <custom-bread-crumb show-icon style="margin-left: 30px;" :list="breadCrumbList"></custom-bread-crumb>
         <div class="header-right">
-          <user :message-unread-count="10" :user-avatar="userAvatar" :user-name="userName"/>
+          <user :message-unread-count="0" :user-avatar="userAvatar" :user-name="userName"/>
           <error-store v-if="$config.plugin['error-store'] && $config.plugin['error-store'].showInHeader"
                        :has-read="hasReadErrorPage" :count="errorCount"></error-store>
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>

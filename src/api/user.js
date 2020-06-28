@@ -46,8 +46,9 @@ export const createUserInfo = ({username,name, password,mobile,avatar}) => {
   })
 }
 
-export const updateUserInfo = ({username,name, password,mobile,avatar},token) => {
+export const updateUserInfo = ({uid,username,name, password,mobile,avatar},token) => {
   const data = {
+    uid:uid,
     username:username,
     name:name,
     password:password,

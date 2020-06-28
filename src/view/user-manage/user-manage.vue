@@ -1,15 +1,17 @@
 <template>
   <div class="user-manage">
     <Button type="primary" style="margin-left: 20px" @click="createUser">创建新用户</Button>
-    <EditUser :user="newUser"
-              :isEdit="isEdit"
-              @visible="this.handleEditVisible"
-              :header="{'token': this.$store.state.user.token}"
-              :is-show="isShowEdit"
-              :upload-url="this.$config.baseUrl.dev + 'upload'"
-              @ok="handleEditOk"
-    ></EditUser>
     <Table style="margin:20px" border :columns="columns" :data="tableData"/>
+    <div v-if="isShowEdit">
+      <EditUser :user="newUser"
+                :isEdit="isEdit"
+                @visible="this.handleEditVisible"
+                :header="{'token': this.$store.state.user.token}"
+                :is-show="true"
+                :upload-url="this.$config.baseUrl + 'upload'"
+                @ok="handleEditOk"
+      ></EditUser>
+    </div>
   </div>
 </template>
 
@@ -182,7 +184,7 @@
       },
       handleEditVisible(visible) {
         console.log('handleEditVisible', visible)
-        if(visible === false){
+        if (visible === false) {
           this.isShowEdit = false
         }
       },
@@ -194,6 +196,7 @@
           this.userdata[this.editIndex] = this.newUser
           console.log(this.newUser)
           this.handleUpdateUserInfo({
+            uid: this.newUser.uid,
             username: this.newUser.username,
             name: this.newUser.name,
             password: this.newUser.password,
@@ -223,7 +226,7 @@
       },
       createUser() {
         this.newUser = {
-          avatar:logo //如果默认的没有图片，上传返回url重新设置不会马上刷新  有默认就可以
+          avatar: logo //如果默认的没有图片，上传返回url重新设置不会马上刷新  有默认就可以
         }
         //显示编辑弹框
         this.isEdit = false

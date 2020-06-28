@@ -72,7 +72,7 @@ class HttpRequest {
       console.log("error:" + JSON.stringify(error))
       this.destroy(url)
       let errorInfo = error.response
-      if (!errorInfo) {
+      if (!typeof(errorInfo) === undefined && !errorInfo) {
         const {request: {statusText, status}, config} = JSON.parse(JSON.stringify(error))
         errorInfo = {
           statusText,
@@ -80,10 +80,12 @@ class HttpRequest {
           request: {responseURL: config.url}
         }
         addErrorLog(errorInfo)
+        const data = {code: status, msg: statusText}
+        this.dealErr(data.code, data.msg)
+      } else {
+        Message.error('网络出现问题，请稍后再试')
       }
-      const data = {code: error.request.status, msg: error.request.statusText}
-      this.dealErr(data.code, data.msg)
-      return Promise.reject(data)
+      return Promise.reject(error)
     })
   }
 
@@ -117,4 +119,5 @@ class HttpRequest {
 
 
 }
+
 export default HttpRequest

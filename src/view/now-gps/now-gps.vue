@@ -1,28 +1,30 @@
 <template>
   <div id="root">
-    <Card id="menu">
-      <Row>
-        <i-col span="4">
-          <Dropdown @on-click="this.onUsersClick" class='dropdown'>
-            <i-button>
-              当前: {{this.currentUser.name}}
-              <Icon type="arrow-down-b"></Icon>
-            </i-button>
-            <template v-for="(item,index) in this.data">
-              <DropdownMenu slot="list">
-                <DropdownItem :name="index">
-                  <a type="text" class="drop-item-a">
-                    <img :src="item.avatar" style="width: 20px;height: 20px"/>
-                    <span style="padding-left: 5px">{{item.name}}</span>
-                  </a>
-                </DropdownItem>
-              </DropdownMenu>
-            </template>
-          </Dropdown>
-        </i-col>
-      </Row>
-    </Card>
-    <div id="map" style="width: 100%;height: 100%"></div>
+    <div id="menu">
+      <Card>
+        <Row>
+          <i-col span="4">
+            <Dropdown @on-click="this.onUsersClick" class='dropdown'>
+              <i-button>
+                当前: {{this.currentUser.name}}
+                <Icon type="arrow-down-b"></Icon>
+              </i-button>
+              <template v-for="(item,index) in this.data">
+                <DropdownMenu slot="list">
+                  <DropdownItem :name="index">
+                    <a type="text" class="drop-item-a">
+                      <img :src="item.avatar" style="width: 20px;height: 20px"/>
+                      <span style="padding-left: 5px">{{item.name}}</span>
+                    </a>
+                  </DropdownItem>
+                </DropdownMenu>
+              </template>
+            </Dropdown>
+          </i-col>
+        </Row>
+      </Card>
+    </div>
+    <div id="map"></div>
   </div>
 </template>
 
@@ -42,8 +44,8 @@
         map: {},
         geocoder: {},
         infoWindow: {},
-        data:[],
-        currentUser:{},
+        data: [],
+        currentUser: {},
       }
     },
     methods: {
@@ -117,7 +119,7 @@
             if (item.uid.toString() === this.$store.state.user.userId.toString()) {
               this.currentUser = item
               //设为中心 显示信息
-              this.map.setCenter([item.lng,item.lat])
+              this.map.setCenter([item.lng, item.lat])
             }
           })
         }
@@ -126,7 +128,7 @@
         const item = this.data[index]
         this.currentUser = item
         //设为中心
-        this.map.setCenter([item.lng,item.lat])
+        this.map.setCenter([item.lng, item.lat])
       },
     },
     mounted() {
