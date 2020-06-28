@@ -77,6 +77,7 @@
     </Sider>
     <layout>
       <Header class="header" :style="{padding:0}">
+
         <Icon @click.native="collapsedSider" :class="rotateIcon" :style="{margin:'0 20px'}" type='md-menu'
               size="24"></Icon>
         <custom-bread-crumb show-icon style="margin-left: 30px;" :list="breadCrumbList"></custom-bread-crumb>
@@ -87,16 +88,18 @@
           <fullscreen v-model="isFullscreen" style="margin-right: 10px;"/>
         </div>
       </Header>
-      <Layout class="main-layout-con">
-        <div class="tag-nav-wrapper">
-          <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"></tags-nav>
-        </div>
-        <Content class="content-wrapper">
-          <keep-alive>
-            <router-view/>
-          </keep-alive>
-        </Content>
-      </Layout>
+      <Content class="main-content-con">
+        <Layout class="main-layout-con">
+          <div class="tag-nav-wrapper">
+            <tags-nav :value="$route" @input="handleClick" :list="tagNavList" @on-close="handleCloseTag"></tags-nav>
+          </div>
+          <Content class="content-wrapper">
+            <keep-alive>
+              <router-view/>
+            </keep-alive>
+          </Content>
+        </Layout>
+      </Content>
       <!--      <Footer class="footer">Footer</Footer>-->
     </layout>
   </Layout>
@@ -202,7 +205,7 @@
         }, complete => {
           console.log('complete')
         }, err => {
-          console.log('err',err)
+          console.log('err', err)
           //如果出错回退菜单按钮点击
           this.$refs.menu.currentActiveName = this.$route.name
         })
