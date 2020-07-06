@@ -8,10 +8,10 @@ export const login = ({username, password}) => {
   }
   return axios.request({
     url: 'login',
-    headers:{
+    headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
-    data:Qs.stringify(data),
+    data: Qs.stringify(data),
     method: 'post'
   })
 }
@@ -22,43 +22,43 @@ export const deleteUser = ({uid}, token) => {
   }
   return axios.request({
     url: 'delete_user',
-    headers:{
+    headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
       'token': token
     },
-    data:Qs.stringify(data),
+    data: Qs.stringify(data),
     method: 'post'
   })
 }
 
-export const createUserInfo = ({username,name, password,mobile,avatar}) => {
+export const createUserInfo = ({username, name, password, mobile, avatar}) => {
   const data = {
-    username:username,
-    name:name,
-    password:password,
-    mobile:mobile,
-    avatar:avatar,
+    username: username,
+    name: name,
+    password: password,
+    mobile: mobile,
+    avatar: avatar,
   }
   return axios.request({
     url: 'create_user',
-    data:data,
+    data: data,
     method: 'post'
   })
 }
 
-export const updateUserInfo = ({uid,username,name, password,mobile,avatar},token) => {
+export const updateUserInfo = ({uid, username, name, password, mobile, avatar}, token) => {
   const data = {
-    uid:uid,
-    username:username,
-    name:name,
-    password:password,
-    mobile:mobile,
-    avatar:avatar,
+    uid: uid,
+    username: username,
+    name: name,
+    password: password,
+    mobile: mobile,
+    avatar: avatar,
   }
   return axios.request({
     url: 'update_user',
     headers: {'token': token},
-    data:data,
+    data: data,
     method: 'post'
   })
 }
@@ -75,6 +75,17 @@ export const getAllNowGps = (token) => {
   return axios.request({
     url: 'allNowGps',
     headers: {'token': token},
+    method: 'post'
+  })
+}
+export const getNowGps = ({uid}, token) => {
+  const data = {
+    uid: uid
+  }
+  return axios.request({
+    url: 'nowGps',
+    headers: {'token': token},
+    data: data,
     method: 'post'
   })
 }

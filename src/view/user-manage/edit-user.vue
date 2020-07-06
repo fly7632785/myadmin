@@ -44,7 +44,7 @@
         avatar:'',
         name: '',
         username: '',
-        password: '',
+        password:null,
         mobile: '',
       },
       //是否显示弹框

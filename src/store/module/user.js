@@ -3,6 +3,7 @@ import {
   getUserInfo,
   getUnreadCount,
   getAllNowGps,
+  getNowGps,
   getAllUsers,
   getGpsHis,
   updateUserInfo,
@@ -193,6 +194,20 @@ export default {
       return new Promise((resolve, reject) => {
         try {
           getAllNowGps(state.token).then(data => {
+            resolve(data)
+          }).catch(err => {
+            reject(err)
+          })
+        } catch (error) {
+          reject(error)
+        }
+      })
+    },
+    //获取当事人的实时定位
+    getNowGps({state},{uid}) {
+      return new Promise((resolve, reject) => {
+        try {
+          getNowGps({uid},state.token).then(data => {
             resolve(data)
           }).catch(err => {
             reject(err)

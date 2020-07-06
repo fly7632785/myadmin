@@ -33,6 +33,7 @@
 
   import './now-gps.less'
   import AMap from 'AMap'
+  import Vue from 'vue'
   import {mapActions} from "vuex";
   import moment from "moment"
   import personLogo from '@/assets/images/person.png'
@@ -51,6 +52,7 @@
     methods: {
       ...mapActions([
         'getAllNowGps',
+        'getNowGps',
         'handleGetAllUsers',
       ]),
       initMap() {
@@ -79,6 +81,24 @@
           console.log("res", JSON.stringify(res))
         })
       },
+      nowGps() {
+        console.log("nowGps ", JSON.stringify(res))
+        this.getNowGps({}).then(res => {
+          this.data = res;
+          // var info = this.getContentByItem(res, marker);
+          // marker.content = info.join("<br/>")  //使用默认信息窗体框样式，显示信息内容
+          // marker.emit('mouseover', {target: marker});
+          console.log("nowGps res", JSON.stringify(res))
+        })
+      },
+      getContentByItem: function (item) {
+        let time = moment(new Date(item.time * 1000)).format('YYYY-MM-DD HH:mm')
+        var info = [];
+        info.push('<img src=' + item.avatar + ' style=width:50px;height:50px>');
+        info.push("姓名：" + item.name);
+        info.push("时间：" + time);
+        return info;
+      },
       addMarkers(data) {
         this.infoWindow = new AMap.InfoWindow({offset: new AMap.Pixel(0, -70)});
         data.forEach((item, index) => {
@@ -86,14 +106,11 @@
             position: [item.lng, item.lat],
             icon: personLogo,
             offset: new AMap.Pixel(-15, -66),
-            map: this.map
+            map: this.map,
+            extData: item,
           });
-          const time = moment(new Date(item.time * 1000)).format('YYYY-MM-DD HH:mm')
-          var info = [];
-          info.push('<img src=' + item.avatar + ' style=width:50px;height:50px>');
-          info.push("姓名：" + item.name);
-          info.push("时间：" + time);
-          marker.content = info.join("<br/>")  //使用默认信息窗体框样式，显示信息内容
+          var info = this.getContentByItem(item);
+          marker.content = info.join("<br/>") //使用默认信息窗体框样式，显示信息内容
           marker.on('mouseover', this.markerHover);
           // marker.emit('mouseover', {target: marker});
         })
@@ -106,6 +123,9 @@
             var address = result.regeocode.formattedAddress;
             console.dir(address);
             const content = e.target.content + '<br/>地址：' + address;
+            const marker = e.target
+            const item = e.target.getExtData()
+            console.log('extData', e.target.getExtData());
             _this.infoWindow.setContent(content)
             _this.infoWindow.open(_this.map, e.target.getPosition());
           }
@@ -116,7 +136,7 @@
           res.forEach(item => {
             //默认获取自己的
             //注意从cookie里面拿出来默认是string
-            if (item.uid.toString() === this.$store.state.user.userId.toString()) {
+            if (item.uid == this.$store.state.user.userId) {
               this.currentUser = item
               //设为中心 显示信息
               this.map.setCenter([item.lng, item.lat])

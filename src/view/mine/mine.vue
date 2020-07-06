@@ -66,11 +66,14 @@
   import {updateUserInfo} from "@/api/user";
   import {Message} from "iview";
 
+
+  import test from '../test/test.js'
+
   export default {
     name: 'mine',
     data() {
       return {
-        password: '',
+        password: null,
         mobile: this.$store.state.user.mobile,
         avatar: this.$store.state.user.avatar,
         name: this.$store.state.user.name,
@@ -100,7 +103,12 @@
       save() {
         console.log('name', this.name)
         console.log('password', this.password)
-        this.handleUpdateUserInfo({name: this.name, password: this.password, mobile: this.mobile,avatar:this.avatar}).then(data => {
+        this.handleUpdateUserInfo({
+          name: this.name,
+          password: this.password,
+          mobile: this.mobile,
+          avatar: this.avatar
+        }).then(data => {
           if (this.password) {
             Message.success('修改密码成功,重新登录')
             this.$router.push('login')
@@ -129,7 +137,7 @@
       },
     },
     mounted() {
-      console.log("upload url:",this.$config.baseUrl + "upload")
+      console.log("upload url:", this.$config.baseUrl + "upload")
       console.log("token:", this.$store.state.user.token)
     }
   };

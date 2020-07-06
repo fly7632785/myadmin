@@ -90,12 +90,12 @@
           if (res && users.length > 0) {
             users.forEach(item => {
               //默认获取自己的
-              //注意从cookie里面拿出来默认是string
+              //注意从cookie里面拿出来默认是string   == 就可以比较
               console.log("this.$store.state.user.userId", this.$store.state.user.userId)
               console.log("item.uid.toString()", item.uid.toString())
               console.log("this.$store.state.user.userId", typeof this.$store.state.user.userId)
               console.log("item.uid.toString()", typeof item.uid)
-              if (item.uid.toString() === this.$store.state.user.userId.toString()) {
+              if (item.uid == this.$store.state.user.userId) {
                 console.log("===")
                 this.currentUser = item
                 this.selectGpsHis(item.uid)
