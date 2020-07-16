@@ -1,6 +1,6 @@
 const dev = 'http://127.0.0.1:9090/'
 // const pro = 'https://47.108.59.73:9090/'
-const pro = 'https://keep999.cn:9090/'
+const pro = 'http://jafir.nofoo.cn:9090/'
 const baseUrl = process.env.NODE_ENV === 'development' ? dev : pro
 export default {
   baseUrl: baseUrl,
