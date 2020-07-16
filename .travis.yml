@@ -11,6 +11,7 @@ before_install:
 - openssl aes-256-cbc -K $encrypted_d51746e9182b_key -iv $encrypted_d51746e9182b_iv
   -in nopwd.enc -out ~/.ssh/nopwd -d
 script:
+- npm install
 - npm run build
 - docker build -t registry.cn-hangzhou.aliyuncs.com/jafir_docker_images/web:latest .
 after_success:
