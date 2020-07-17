@@ -112,46 +112,46 @@ export default [
       }
     ]
   },
-  // {
-  //   path: '/test',
-  //   name: 'test',
-  //   meta: {
-  //     hideInBread: true,
-  //     title: '测试',
-  //     icon: 'ios-crop'
-  //   },
-  //   component: Main,
-  //   children: [
-  //     {
-  //       path: 'test1',
-  //       name: 'test1',
-  //       meta: {
-  //         beforeCloseName: 'before_close_normal',
-  //         title: "测试1",
-  //         icon: 'logo-buffer'
-  //       },
-  //       component: getComponents('test', 'test1')
-  //     },
-  //     {
-  //       path: 'test2',
-  //       name: 'test2',
-  //       meta: {
-  //         title: "测试2",
-  //         icon: 'ios-brush'
-  //       },
-  //       component: getComponents('test', 'test2')
-  //     },
-  //     {
-  //       path: 'test3',
-  //       name: 'test3',
-  //       meta: {
-  //         title: "测试3",
-  //         icon: 'ios-brush'
-  //       },
-  //       component: getComponents('test', 'test3')
-  //     }
-  //   ]
-  // },
+  {
+    path: '/test',
+    name: 'test',
+    meta: {
+      hideInBread: true,
+      title: '测试',
+      icon: 'ios-crop'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'test1',
+        name: 'test1',
+        meta: {
+          beforeCloseName: 'before_close_normal',
+          title: "测试1",
+          icon: 'logo-buffer'
+        },
+        component: getComponents('test', 'test1')
+      },
+      {
+        path: 'test2',
+        name: 'test2',
+        meta: {
+          title: "测试2",
+          icon: 'ios-brush'
+        },
+        component: getComponents('test', 'test2')
+      },
+      {
+        path: 'test3',
+        name: 'test3',
+        meta: {
+          title: "测试3",
+          icon: 'ios-brush'
+        },
+        component: getComponents('test', 'test3')
+      }
+    ]
+  },
   // {
   //   path: '/query',
   //   name: 'query',
